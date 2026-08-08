@@ -1,696 +1,994 @@
-<p>MIU Seminar Scanner</p>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta charset="UTF-8">
 
-  <title>MIU CSE Club - QR Scanner</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <!-- QR Scanner Library -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
+<title>
+MIU Seminar Management
+</title>
 
-  <style>
+<style>
 
-    * {
-      box-sizing: border-box;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #111;
-    }
+body {
 
-    .container {
-      max-width: 520px;
-      margin: auto;
-      padding: 20px;
-    }
+  margin: 0;
 
-    .header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
-    .header h1 {
-      margin: 0;
-      font-size: 25px;
-    }
+  background: #f5f5f5;
 
-    .header p {
-      margin: 6px 0;
-      font-size: 14px;
-    }
+  color: #111;
+}
 
-    .club {
-      font-weight: bold;
-      font-size: 16px;
-    }
+/* =========================
+HEADER
+========================= */
 
-    .mode-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
+.header {
 
-    .mode-buttons button {
-      flex: 1;
-      padding: 13px;
-      border: 2px solid #111;
-      background: white;
-      color: #111;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  background: #000;
 
-    .mode-buttons button.active {
-      background: #111;
-      color: white;
-    }
+  color: #fff;
 
-    #reader {
-      width: 100%;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-    }
+  padding: 28px 20px;
 
-    .status {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 10px;
-      background: white;
-      text-align: center;
-      border: 1px solid #ddd;
-    }
+  text-align: center;
+}
 
-    .status h2 {
-      margin: 0 0 8px;
-      font-size: 21px;
-    }
+.header h1 {
 
-    .status p {
-      margin: 5px 0;
-    }
+  margin: 0;
 
-    .success {
-      background: #dff5e3;
-      border-color: #28a745;
-    }
+  font-size: 28px;
+}
 
-    .error {
-      background: #ffe1e1;
-      border-color: #dc3545;
-    }
+.header p {
 
-    .warning {
-      background: #fff3cd;
-      border-color: #ffc107;
-    }
+  margin: 8px 0 0;
 
-    .info {
-      background: #e8f0fe;
-      border-color: #4285f4;
-    }
+  font-size: 14px;
 
-    .start-button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 8px;
-      background: #111;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  opacity: 0.8;
+}
 
-    .start-button:disabled {
-      opacity: 0.5;
-    }
+/* =========================
+CONTAINER
+========================= */
 
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #555;
-    }
+.container {
 
-  </style>
+  width: 100%;
+
+  max-width: 1100px;
+
+  margin: auto;
+
+  padding: 25px 18px;
+}
+
+/* =========================
+STATUS
+========================= */
+
+.status {
+
+  text-align: center;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+
+  color: #555;
+}
+
+/* =========================
+STAT CARDS
+========================= */
+
+.stats {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 15px;
+}
+
+.card {
+
+  background: #fff;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 12px;
+
+  padding: 22px;
+
+  text-align: center;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card .icon {
+
+  font-size: 28px;
+
+  margin-bottom: 8px;
+}
+
+.card .number {
+
+  font-size: 32px;
+
+  font-weight: 700;
+}
+
+.card .label {
+
+  font-size: 13px;
+
+  color: #666;
+
+  margin-top: 5px;
+}
+
+/* =========================
+ATTENDANCE
+========================= */
+
+.attendance {
+
+  margin-top: 20px;
+
+  background: #fff;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 12px;
+
+  padding: 25px;
+}
+
+.attendance-header {
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  margin-bottom: 12px;
+}
+
+.attendance-title {
+
+  font-weight: 700;
+
+  font-size: 17px;
+}
+
+.percentage {
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+.progress {
+
+  width: 100%;
+
+  height: 18px;
+
+  background: #e5e5e5;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.progress-bar {
+
+  height: 100%;
+
+  width: 0%;
+
+  background: #111;
+
+  transition:
+    width 0.5s ease;
+}
+
+/* =========================
+BUTTONS
+========================= */
+
+.actions {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 25px;
+
+  flex-wrap: wrap;
+}
+
+.btn {
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding:
+    13px 22px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.btn-primary {
+
+  background: #000;
+
+  color: #fff;
+}
+
+.btn-secondary {
+
+  background: #fff;
+
+  color: #111;
+
+  border:
+    1px solid #ccc;
+}
+
+.btn:hover {
+
+  opacity: 0.8;
+}
+
+/* =========================
+RECENT ACTIVITY
+========================= */
+
+.recent {
+
+  margin-top: 25px;
+
+  background: #fff;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+.recent-header {
+
+  padding: 18px 20px;
+
+  border-bottom:
+    1px solid #eee;
+
+  font-weight: 700;
+}
+
+.activity {
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  padding:
+    15px 20px;
+
+  border-bottom:
+    1px solid #eee;
+
+  gap: 15px;
+}
+
+.activity:last-child {
+
+  border-bottom: none;
+}
+
+.activity-name {
+
+  font-weight: 600;
+}
+
+.activity-reg {
+
+  font-size: 12px;
+
+  color: #777;
+
+  margin-top: 3px;
+}
+
+.activity-right {
+
+  text-align: right;
+}
+
+.entered {
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.time {
+
+  font-size: 11px;
+
+  color: #777;
+
+  margin-top: 3px;
+}
+
+/* =========================
+FOOTER
+========================= */
+
+.footer {
+
+  text-align: center;
+
+  padding: 30px;
+
+  font-size: 12px;
+
+  color: #777;
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width: 750px) {
+
+  .stats {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .card {
+
+    padding: 18px 10px;
+  }
+
+  .card .number {
+
+    font-size: 25px;
+  }
+
+}
+
+@media(max-width: 450px) {
+
+  .stats {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .header h1 {
+
+    font-size: 22px;
+  }
+
+  .activity {
+
+    padding: 13px;
+  }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-  <div class="header">
+<!-- =========================
+HEADER
+========================= -->
 
-    <div class="club">
-      MIU CSE CLUB
+<header class="header">
+
+  <h1>
+    MIU CSE CLUB
+  </h1>
+
+  <p>
+    Beyond the Classroom: AI, Careers & Digital Security
+  </p>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- STATUS -->
+
+<div
+  id="status"
+  class="status"
+>
+  Loading seminar data...
+</div>
+
+
+<!-- =========================
+STATISTICS
+========================= -->
+
+<section class="stats">
+
+
+  <div class="card">
+
+    <div class="icon">
+      👥
     </div>
 
-    <h1>
-      ICT-Based Seminar 2026
-    </h1>
+    <div
+      id="total"
+      class="number"
+    >
+      -
+    </div>
 
-    <p>
-      QR Verification System
-    </p>
+    <div class="label">
+      Total Registered
+    </div>
 
   </div>
 
 
-  <!-- MODE -->
+  <div class="card">
 
-  <div class="mode-buttons">
+    <div class="icon">
+      ✅
+    </div>
 
-    <button
-      id="entryButton"
-      class="active"
-      onclick="setMode('ENTRY')"
+    <div
+      id="attended"
+      class="number"
     >
-      ENTRY
-    </button>
+      -
+    </div>
 
-    <button
-      id="foodButton"
-      onclick="setMode('FOOD')"
-    >
-      FOOD
-    </button>
+    <div class="label">
+      Attended
+    </div>
 
   </div>
 
 
-  <!-- SCANNER -->
+  <div class="card">
 
-  <div id="reader"></div>
+    <div class="icon">
+      ❌
+    </div>
+
+    <div
+      id="absent"
+      class="number"
+    >
+      -
+    </div>
+
+    <div class="label">
+      Absent
+    </div>
+
+  </div>
 
 
-  <!-- START CAMERA -->
+  <div class="card">
+
+    <div class="icon">
+      🍱
+    </div>
+
+    <div
+      id="food"
+      class="number"
+    >
+      -
+    </div>
+
+    <div class="label">
+      Food Given
+    </div>
+
+  </div>
+
+
+</section>
+
+
+<!-- =========================
+FOOD PENDING
+========================= -->
+
+<section
+  class="attendance"
+>
+
+  <div class="attendance-header">
+
+    <div class="attendance-title">
+
+      Attendance
+
+    </div>
+
+    <div
+      id="percentage"
+      class="percentage"
+    >
+
+      0%
+
+    </div>
+
+  </div>
+
+
+  <div class="progress">
+
+    <div
+      id="progressBar"
+      class="progress-bar"
+    ></div>
+
+  </div>
+
+
+  <div
+    style="
+      margin-top:12px;
+      color:#666;
+      font-size:13px;
+    "
+  >
+
+    Food Pending:
+
+    <strong
+      id="foodPending"
+    >
+      -
+    </strong>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+ACTIONS
+========================= -->
+
+<div class="actions">
 
   <button
-    id="startButton"
-    class="start-button"
-    onclick="startScanner()"
+    class="btn btn-primary"
+    onclick="openScanner()"
   >
-    START CAMERA
+
+    📷 Open QR Scanner
+
   </button>
 
 
-  <!-- STATUS -->
-
-  <div
-    id="status"
-    class="status info"
+  <button
+    class="btn btn-secondary"
+    onclick="loadDashboard()"
   >
 
-    <h2>
-      READY
-    </h2>
+    🔄 Refresh Data
 
-    <p>
-      Select ENTRY or FOOD and scan the QR code.
-    </p>
-
-  </div>
-
-
-  <div class="footer">
-
-    Beyond the Classroom: AI, Careers & Digital Security<br>
-
-    Manarat International University
-
-  </div>
+  </button>
 
 </div>
 
 
+<!-- =========================
+RECENT ACTIVITY
+========================= -->
+
+<section class="recent">
+
+  <div class="recent-header">
+
+    Recent Entry Activity
+
+  </div>
+
+
+  <div
+    id="recent"
+  >
+
+    <div
+      style="
+        padding:20px;
+        text-align:center;
+        color:#777;
+      "
+    >
+
+      Loading...
+
+    </div>
+
+  </div>
+
+</section>
+
+
+</main>
+
+
+<footer class="footer">
+
+  MIU CSE CLUB • ICT-Based Seminar 2026
+
+</footer>
+
+
 <script>
 
-
-// ==========================================================
-// APPS SCRIPT BACKEND
-// ==========================================================
+/* =====================================================
+   CONFIGURATION
+===================================================== */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbxZVMbd6wmyYHlbAXxlf6BU7Wt1ZNyfO7_tD4GGV8g7_1drl99etNMcKEiyq0CeE7Kj/exec";
+  "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 
-// ==========================================================
-// VARIABLES
-// ==========================================================
+/* =====================================================
+   OPEN SCANNER
+===================================================== */
 
-let scanner = null;
+function openScanner() {
 
-let scannerRunning = false;
-
-let currentMode = "ENTRY";
-
-let processing = false;
-
-
-// ==========================================================
-// SET MODE
-// ==========================================================
-
-function setMode(mode) {
-
-  currentMode = mode;
-
-  document
-    .getElementById("entryButton")
-    .classList
-    .remove("active");
-
-  document
-    .getElementById("foodButton")
-    .classList
-    .remove("active");
-
-
-  if (mode === "ENTRY") {
-
-    document
-      .getElementById("entryButton")
-      .classList
-      .add("active");
-
-  } else {
-
-    document
-      .getElementById("foodButton")
-      .classList
-      .add("active");
-
-  }
-
-
-  showStatus(
-    "info",
-    mode + " MODE",
-    "Ready to scan."
-  );
+  window.location.href =
+    "scanner.html";
 
 }
 
 
-// ==========================================================
-// STATUS
-// ==========================================================
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
 
-function showStatus(
-  type,
-  title,
-  message
-) {
+async function loadDashboard() {
 
   const status =
     document.getElementById("status");
 
-  status.className =
-    "status " + type;
+  status.textContent =
+    "Updating data...";
 
-  status.innerHTML =
 
-    "<h2>" +
-    escapeHtml(title) +
-    "</h2>" +
+  try {
 
-    "<p>" +
-    message +
-    "</p>";
-
-}
-
-
-// ==========================================================
-// START SCANNER
-// ==========================================================
-
-function startScanner() {
-
-  if (scannerRunning) {
-    return;
-  }
-
-
-  if (!scanner) {
-
-    scanner =
-      new Html5Qrcode("reader");
-
-  }
-
-
-  showStatus(
-    "info",
-    "STARTING CAMERA",
-    "Please allow camera access."
-  );
-
-
-  scanner.start(
-
-    {
-      facingMode: "environment"
-    },
-
-    {
-      fps: 10,
-
-      qrbox: {
-        width: 250,
-        height: 250
-      }
-
-    },
-
-    onScanSuccess,
-
-    onScanFailure
-
-  )
-
-  .then(function() {
-
-    scannerRunning = true;
-
-    document
-      .getElementById("startButton")
-      .disabled = true;
-
-    document
-      .getElementById("startButton")
-      .innerText =
-      "CAMERA ACTIVE";
-
-
-    showStatus(
-      "info",
-      currentMode + " MODE",
-      "Point the camera at a QR code."
-    );
-
-  })
-
-  .catch(function(error) {
-
-    console.error(error);
-
-    showStatus(
-      "error",
-      "CAMERA ERROR",
-      "Camera could not be started. Please allow camera permission and try again."
-    );
-
-  });
-
-}
-
-
-// ==========================================================
-// QR SCAN SUCCESS
-// ==========================================================
-
-function onScanSuccess(
-  decodedText,
-  decodedResult
-) {
-
-  if (processing) {
-    return;
-  }
-
-
-  processing = true;
-
-
-  console.log(
-    "QR:",
-    decodedText
-  );
-
-
-  // Stop repeated scans temporarily
-
-  if (scannerRunning) {
-
-    scanner.pause(
-      true
-    );
-
-  }
-
-
-  showStatus(
-    "info",
-    "VERIFYING...",
-    "Checking registration..."
-  );
-
-
-  verifyToken(
-    decodedText
-  );
-
-}
-
-
-// ==========================================================
-// QR SCAN FAILURE
-// ==========================================================
-
-function onScanFailure(error) {
-
-  // Ignore continuous scan errors.
-
-}
-
-
-// ==========================================================
-// VERIFY TOKEN
-// ==========================================================
-
-function verifyToken(token) {
-
-  const url =
-    API_URL +
-
-    "?token=" +
-    encodeURIComponent(token) +
-
-    "&action=" +
-    encodeURIComponent(currentMode) +
-
-    "&callback=handleResponse";
-
-
-  const script =
-    document.createElement("script");
-
-
-  script.src = url;
-
-
-  script.id =
-    "jsonpRequest";
-
-
-  script.onerror =
-    function() {
-
-      showStatus(
-        "error",
-        "CONNECTION ERROR",
-        "Could not connect to the verification server."
+    const response =
+      await fetch(
+        API_URL +
+        "?action=dashboard&t=" +
+        Date.now()
       );
 
 
-      finishProcessing();
+    if (!response.ok) {
 
-    };
+      throw new Error(
+        "Server returned " +
+        response.status
+      );
 
-
-  document
-    .body
-    .appendChild(script);
-
-}
+    }
 
 
-// ==========================================================
-// JSONP RESPONSE
-// ==========================================================
-
-function handleResponse(data) {
-
-  console.log(
-    "Server response:",
-    data
-  );
+    const data =
+      await response.json();
 
 
-  if (data.success) {
+    if (!data.success) {
 
-    showStatus(
-
-      "success",
-
-      data.message,
-
-      "<strong>" +
-      escapeHtml(
-        data.name || ""
-      ) +
-      "</strong><br>" +
-
-      "RegID: " +
-      escapeHtml(
-        data.regId || ""
-      ) +
-      "<br>" +
-
-      "Time: " +
-      escapeHtml(
-        data.time || ""
-      )
-
-    );
-
-  }
-
-  else if (data.duplicate) {
-
-    showStatus(
-
-      "warning",
-
-      data.message,
-
-      "<strong>" +
-      escapeHtml(
-        data.name || ""
-      ) +
-      "</strong><br>" +
-
-      "RegID: " +
-      escapeHtml(
-        data.regId || ""
-      ) +
-      "<br>" +
-
-      "Previous Time: " +
-      escapeHtml(
-        data.time || "Not recorded"
-      )
-
-    );
-
-  }
-
-  else {
-
-    showStatus(
-
-      "error",
-
-      "INVALID QR",
-
-      escapeHtml(
+      throw new Error(
         data.message ||
-        "QR code is not valid."
-      )
+        "Unable to load dashboard."
+      );
 
+    }
+
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    document.getElementById(
+      "total"
+    ).textContent =
+      data.total;
+
+
+    document.getElementById(
+      "attended"
+    ).textContent =
+      data.attended;
+
+
+    document.getElementById(
+      "absent"
+    ).textContent =
+      data.absent;
+
+
+    document.getElementById(
+      "food"
+    ).textContent =
+      data.foodGiven;
+
+
+    document.getElementById(
+      "foodPending"
+    ).textContent =
+      data.foodPending;
+
+
+    /* =========================
+       ATTENDANCE
+    ========================= */
+
+    const percentage =
+      Number(
+        data.attendancePercentage || 0
+      );
+
+
+    document.getElementById(
+      "percentage"
+    ).textContent =
+      percentage + "%";
+
+
+    document.getElementById(
+      "progressBar"
+    ).style.width =
+      Math.min(
+        percentage,
+        100
+      ) + "%";
+
+
+    /* =========================
+       RECENT ACTIVITY
+    ========================= */
+
+    renderRecent(
+      data.recent || []
     );
 
+
+    status.textContent =
+      "Last updated: " +
+      new Date()
+        .toLocaleTimeString();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    status.textContent =
+      "Unable to load data: " +
+      error.message;
+
   }
-
-
-  finishProcessing();
 
 }
 
 
-// ==========================================================
-// FINISH PROCESSING
-// ==========================================================
+/* =====================================================
+   RECENT ACTIVITY
+===================================================== */
 
-function finishProcessing() {
+function renderRecent(items) {
 
-  processing = false;
-
-
-  // Remove JSONP script
-
-  const script =
+  const container =
     document.getElementById(
-      "jsonpRequest"
+      "recent"
     );
 
 
-  if (script) {
-    script.remove();
+  if (!items.length) {
+
+    container.innerHTML =
+
+      `<div
+        style="
+          padding:20px;
+          text-align:center;
+          color:#777;
+        "
+      >
+        No entry recorded yet.
+      </div>`;
+
+    return;
+
   }
 
 
-  // Resume scanning
+  container.innerHTML =
+    items.map(function(item) {
 
-  setTimeout(
-    function() {
+      let time = "";
 
-      if (
-        scanner &&
-        scannerRunning
-      ) {
+      if (item.entryTime) {
 
-        try {
-
-          scanner.resume();
-
-        } catch (error) {
-
-          console.log(error);
-
-        }
+        time =
+          new Date(
+            item.entryTime
+          ).toLocaleTimeString(
+            [],
+            {
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+          );
 
       }
 
-    },
 
-    2500
-  );
+      return `
+
+        <div class="activity">
+
+          <div>
+
+            <div class="activity-name">
+
+              ${escapeHtml(
+                item.name
+              )}
+
+            </div>
+
+            <div class="activity-reg">
+
+              ${escapeHtml(
+                item.regId
+              )}
+
+            </div>
+
+          </div>
+
+
+          <div class="activity-right">
+
+            <div class="entered">
+
+              ✓ ${escapeHtml(
+                item.entry
+              )}
+
+            </div>
+
+            <div class="time">
+
+              ${time}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
 
 }
 
 
-// ==========================================================
-// ESCAPE HTML
-// ==========================================================
+/* =====================================================
+   SECURITY
+===================================================== */
 
-function escapeHtml(text) {
+function escapeHtml(value) {
 
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    String(text);
-
-  return div.innerHTML;
+  return String(value || "")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadDashboard();
+
+
+/* Auto refresh every 30 seconds */
+
+setInterval(
+  loadDashboard,
+  30000
+);
 
 </script>
 
+
 </body>
+
 </html>
