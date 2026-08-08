@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>MIU CSE Club | QR Scanner</title>
+
+  <!-- QR SCANNER LIBRARY -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      background: #f4f4f4;
+      color: #111;
+      min-height: 100vh;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    .club {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 7px;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      padding: 20px 15px 40px;
+    }
+
+    /* =========================
+       SCANNER CARD
+    ========================= */
+
+    .scanner-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow:
+        0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    .scanner-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .scanner-subtitle {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+
+    /* =========================
+       QR READER
+    ========================= */
+
+    #reader {
+      width: 100%;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    #reader video {
+      border-radius: 10px;
+    }
+
+    /* =========================
+       RESULT
+    ========================= */
+
+    .result {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .result-header {
+      background: #000;
+      color: #fff;
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .result-body {
+      padding: 18px;
+    }
+
+    .participant {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .participant-name {
+      font-size: 21px;
+      font-weight: 750;
+    }
+
+    .participant-reg {
+      color: #666;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #777;
+    }
+
+    .info-value {
+      font-weight: 700;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status-box {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-success {
+      background: #eee;
+      color: #111;
+      border: 1px solid #ccc;
+    }
+
+    .status-error {
+      background: #f5f5f5;
+      color: #000;
+      border: 1px solid #999;
+    }
+
+    .status-warning {
+      background: #fafafa;
+      color: #555;
+      border: 1px solid #ccc;
+    }
+
+    /* =========================
+       ACTION BUTTONS
+    ========================= */
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #000;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #111;
+      border: 1px solid #ccc;
+    }
+
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+    /* =========================
+       SCAN AGAIN
+    ========================= */
+
+    .scan-again {
+      display: none;
+      margin-top: 15px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 11px;
+      padding: 20px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 500px) {
+
+      .header h1 {
+        font-size: 20px;
+      }
+
+      .scanner-card {
+        padding: 15px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header class="header">
+
+    <div class="club">
+      MIU CSE CLUB
+    </div>
+
+    <h1>
+      QR Verification
+    </h1>
+
+    <p>
+      ICT-Based Seminar 2026
+    </p>
+
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main class="container">
+
+
+    <div class="scanner-card">
+
+
+      <div class="scanner-title">
+        Scan Event Pass
+      </div>
+
+      <div class="scanner-subtitle">
+        Scan the participant's QR code to verify registration
+      </div>
+
+
+      <!-- QR SCANNER -->
+
+      <div id="reader"></div>
+
+
+      <!-- =========================
+           RESULT
+      ========================= -->
+
+      <div
+        id="result"
+        class="result"
+      >
+
+        <div class="result-header">
+          PARTICIPANT INFORMATION
+        </div>
+
+
+        <div class="result-body">
+
+
+          <div class="participant">
+
+            <div
+              id="participantName"
+              class="participant-name"
+            >
+              -
+            </div>
+
+            <div
+              id="participantReg"
+              class="participant-reg"
+            >
+              -
+            </div>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Entry
+            </span>
+
+            <span
+              id="entryStatus"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Entry Time
+            </span>
+
+            <span
+              id="entryTime"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Food
+            </span>
+
+            <span
+              id="foodStatus"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
+
+          <div class="info-row">
+
+            <span class="info-label">
+              Food Time
+            </span>
+
+            <span
+              id="foodTime"
+              class="info-value"
+            >
+              -
+            </span>
+
+          </div>
+
+
+          <div
+            id="statusBox"
+            class="status-box"
+          >
+            Checking...
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           ACTIONS
+      ========================= -->
+
+      <div
+        id="actions"
+        class="actions"
+        style="display:none;"
+      >
+
+        <button
+          class="btn btn-primary"
+          onclick="markEntry()"
+        >
+          ✓ Mark Entry
+        </button>
+
+
+        <button
+          class="btn btn-secondary"
+          onclick="markFood()"
+        >
+          🍱 Mark Food
+        </button>
+
+      </div>
+
+
+      <!-- =========================
+           SCAN AGAIN
+      ========================= -->
+
+      <div
+        id="scanAgain"
+        class="scan-again"
+      >
+
+        <button
+          class="btn btn-primary"
+          onclick="startScanner()"
+          style="width:100%;"
+        >
+          📷 Scan Another QR
+        </button>
+
+      </div>
+
+
+      <!-- =========================
+           DASHBOARD
+      ========================= -->
+
+      <div
+        style="
+          margin-top:15px;
+          text-align:center;
+        "
+      >
+
+        <button
+          class="btn btn-secondary"
+          onclick="goDashboard()"
+          style="width:100%;"
+        >
+          ← Back to Dashboard
+        </button>
+
+      </div>
+
+
+    </div>
+
+
+  </main>
+
+
+  <footer>
+
+    MIU CSE CLUB • ICT-Based Seminar 2026
+
+  </footer>
+
+
+  <script>
+
+
+    /* =====================================================
+       GOOGLE APPS SCRIPT WEB APP URL
+       ===================================================== */
+
+    const API_URL =
+      "";
+
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    let scanner = null;
+
+    let currentToken = "";
+
+    let currentParticipant = null;
+
+    let isProcessing = false;
+
+
+    /* =====================================================
+       START SCANNER
+    ===================================================== */
+
+    function startScanner() {
+
+
+      document.getElementById(
+        "result"
+      ).style.display = "none";
+
+
+      document.getElementById(
+        "actions"
+      ).style.display = "none";
+
+
+      document.getElementById(
+        "scanAgain"
+      ).style.display = "none";
+
+
+      isProcessing = false;
+
+
+      if (scanner) {
+
+        try {
+
+          scanner.clear();
+
+        } catch (e) {
+
+          console.log(e);
+
+        }
+
+      }
+
+
+      scanner =
+        new Html5Qrcode(
+          "reader"
+        );
+
+
+      const config = {
+
+        fps: 10,
+
+        qrbox: function(
+          width,
+          height
+        ) {
+
+          const size =
+            Math.min(
+              width,
+              height
+            ) * 0.70;
+
+          return {
+            width: size,
+            height: size
+          };
+
+        },
+
+        aspectRatio: 1.0
+
+      };
+
+
+      scanner.start(
+
+        {
+          facingMode: "environment"
+        },
+
+        config,
+
+        onScanSuccess,
+
+        onScanError
+
+      )
+
+      .catch(
+        function(error) {
+
+          console.error(
+            "Camera error:",
+            error
+          );
+
+          showError(
+            "Unable to access camera. Please allow camera permission and reload the page."
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       SCAN SUCCESS
+    ===================================================== */
+
+    function onScanSuccess(
+      decodedText
+    ) {
+
+
+      if (isProcessing) {
+        return;
+      }
+
+
+      isProcessing = true;
+
+
+      currentToken =
+        decodedText.trim();
+
+
+      /*
+       * Stop scanner after successful scan
+       */
+
+      stopScanner();
+
+
+      /*
+       * Verify token
+       */
+
+      verifyToken(
+        currentToken
+      );
+
+    }
+
+
+    /* =====================================================
+       SCAN ERROR
+    ===================================================== */
+
+    function onScanError(
+      error
+    ) {
+
+      /*
+       * Ignore normal scanning errors.
+       */
+
+    }
+
+
+    /* =====================================================
+       STOP SCANNER
+    ===================================================== */
+
+    function stopScanner() {
+
+
+      if (!scanner) {
+        return;
+      }
+
+
+      scanner.stop()
+
+        .then(
+          function() {
+
+            console.log(
+              "Scanner stopped"
+            );
+
+          }
+        )
+
+        .catch(
+          function(error) {
+
+            console.log(
+              "Scanner stop error:",
+              error
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =====================================================
+       VERIFY TOKEN
+    ===================================================== */
+
+    async function verifyToken(
+      token
+    ) {
+
+
+      showResult();
+
+
+      setStatus(
+        "Verifying QR code...",
+        "status-warning"
+      );
+
+
+      try {
+
+
+        const url =
+          API_URL +
+          "?action=verify" +
+          "&token=" +
+          encodeURIComponent(
+            token
+          ) +
+          "&t=" +
+          Date.now();
+
+
+        const response =
+          await fetch(url);
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Server error: HTTP " +
+            response.status
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "Verification response:",
+          data
+        );
+
+
+        if (!data.success) {
+
+
+          /*
+           * DUPLICATE
+           */
+
+          if (
+            data.duplicate
+          ) {
+
+            displayParticipant(
+              data
+            );
+
+
+            setStatus(
+              data.message ||
+              "ALREADY ENTERED",
+              "status-warning"
+            );
+
+
+            return;
+
+          }
+
+
+          /*
+           * TOKEN INVALID
+           */
+
+          setStatus(
+            data.message ||
+            "Invalid QR code",
+            "status-error"
+          );
+
+
+          return;
+
+        }
+
+
+        /*
+         * VALID TOKEN
+         */
+
+        currentParticipant =
+          data;
+
+
+        displayParticipant(
+          data
+        );
+
+
+        setStatus(
+          data.message ||
+          "QR verified successfully",
+          "status-success"
+        );
+
+
+        /*
+         * Show action buttons
+         */
+
+        document.getElementById(
+          "actions"
+        ).style.display = "flex";
+
+
+      } catch (error) {
+
+
+        console.error(
+          error
+        );
+
+
+        setStatus(
+          "Connection error: " +
+          error.message,
+          "status-error"
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       DISPLAY PARTICIPANT
+    ===================================================== */
+
+    function displayParticipant(
+      data
+    ) {
+
+
+      document.getElementById(
+        "participantName"
+      ).textContent =
+        data.name ||
+        "Participant";
+
+
+      document.getElementById(
+        "participantReg"
+      ).textContent =
+        data.regId ||
+        "";
+
+
+      document.getElementById(
+        "entryStatus"
+      ).textContent =
+        data.entry ||
+        "NOT ENTERED";
+
+
+      document.getElementById(
+        "entryTime"
+      ).textContent =
+        formatTime(
+          data.entryTime
+        );
+
+
+      document.getElementById(
+        "foodStatus"
+      ).textContent =
+        data.food ||
+        "NOT GIVEN";
+
+
+      document.getElementById(
+        "foodTime"
+      ).textContent =
+        formatTime(
+          data.foodTime
+        );
+
+    }
+
+
+    /* =====================================================
+       MARK ENTRY
+    ===================================================== */
+
+    async function markEntry() {
+
+
+      if (!currentToken) {
+
+        showError(
+          "No QR token found."
+        );
+
+        return;
+
+      }
+
+
+      setStatus(
+        "Marking entry...",
+        "status-warning"
+      );
+
+
+      try {
+
+
+        const url =
+          API_URL +
+          "?action=entry" +
+          "&token=" +
+          encodeURIComponent(
+            currentToken
+          ) +
+          "&t=" +
+          Date.now();
+
+
+        const response =
+          await fetch(url);
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "Entry response:",
+          data
+        );
+
+
+        if (
+          data.success
+        ) {
+
+
+          displayParticipant(
+            data
+          );
+
+
+          setStatus(
+            data.message ||
+            "ENTRY MARKED SUCCESSFULLY",
+            "status-success"
+          );
+
+
+          document.getElementById(
+            "actions"
+          ).style.display = "none";
+
+
+        } else {
+
+
+          setStatus(
+            data.message ||
+            "Unable to mark entry",
+            "status-warning"
+          );
+
+        }
+
+
+      } catch (error) {
+
+
+        setStatus(
+          "Error: " +
+          error.message,
+          "status-error"
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       MARK FOOD
+    ===================================================== */
+
+    async function markFood() {
+
+
+      if (!currentToken) {
+
+        showError(
+          "No QR token found."
+        );
+
+        return;
+
+      }
+
+
+      setStatus(
+        "Marking food...",
+        "status-warning"
+      );
+
+
+      try {
+
+
+        const url =
+          API_URL +
+          "?action=food" +
+          "&token=" +
+          encodeURIComponent(
+            currentToken
+          ) +
+          "&t=" +
+          Date.now();
+
+
+        const response =
+          await fetch(url);
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "Food response:",
+          data
+        );
+
+
+        if (
+          data.success
+        ) {
+
+
+          displayParticipant(
+            data
+          );
+
+
+          setStatus(
+            data.message ||
+            "FOOD MARKED SUCCESSFULLY",
+            "status-success"
+          );
+
+
+          document.getElementById(
+            "actions"
+          ).style.display = "none";
+
+
+        } else {
+
+
+          setStatus(
+            data.message ||
+            "Unable to mark food",
+            "status-warning"
+          );
+
+        }
+
+
+      } catch (error) {
+
+
+        setStatus(
+          "Error: " +
+          error.message,
+          "status-error"
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       SHOW RESULT
+    ===================================================== */
+
+    function showResult() {
+
+
+      document.getElementById(
+        "result"
+      ).style.display = "block";
+
+    }
+
+
+    /* =====================================================
+       STATUS
+    ===================================================== */
+
+    function setStatus(
+      message,
+      className
+    ) {
+
+
+      const box =
+        document.getElementById(
+          "statusBox"
+        );
+
+
+      box.textContent =
+        message;
+
+
+      box.className =
+        "status-box " +
+        className;
+
+    }
+
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    function showError(
+      message
+    ) {
+
+
+      showResult();
+
+
+      setStatus(
+        message,
+        "status-error"
+      );
+
+    }
+
+
+    /* =====================================================
+       FORMAT TIME
+    ===================================================== */
+
+    function formatTime(
+      value
+    ) {
+
+
+      if (
+        !value ||
+        value === "-" ||
+        value === ""
+      ) {
+
+        return "-";
+
+      }
+
+
+      const date =
+        new Date(value);
+
+
+      if (
+        isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return String(
+          value
+        );
+
+      }
+
+
+      return date.toLocaleString(
+        [],
+        {
+          dateStyle: "short",
+          timeStyle: "short"
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       DASHBOARD
+    ===================================================== */
+
+    function goDashboard() {
+
+      window.location.href =
+        "index.html";
+
+    }
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    window.addEventListener(
+      "load",
+      function() {
+
+        startScanner();
+
+      }
+    );
+
+
+  </script>
+
+
+</body>
+
+</html>
