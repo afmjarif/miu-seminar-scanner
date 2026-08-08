@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>MIU CSE Club - QR Scanner</title>
+
+  <!-- QR Scanner Library -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #111;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .header p {
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .club {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .mode-buttons button {
+      flex: 1;
+      padding: 13px;
+      border: 2px solid #111;
+      background: white;
+      color: #111;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .mode-buttons button.active {
+      background: #111;
+      color: white;
+    }
+
+    #reader {
+      width: 100%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    .status h2 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .status p {
+      margin: 5px 0;
+    }
+
+    .success {
+      background: #dff5e3;
+      border-color: #28a745;
+    }
+
+    .error {
+      background: #ffe1e1;
+      border-color: #dc3545;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border-color: #ffc107;
+    }
+
+    .info {
+      background: #e8f0fe;
+      border-color: #4285f4;
+    }
+
+    .start-button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #111;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .start-button:disabled {
+      opacity: 0.5;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #555;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+
+    <div class="club">
+      MIU CSE CLUB
+    </div>
+
+    <h1>
+      ICT-Based Seminar 2026
+    </h1>
+
+    <p>
+      QR Verification System
+    </p>
+
+  </div>
+
+
+  <!-- MODE -->
+
+  <div class="mode-buttons">
+
+    <button
+      id="entryButton"
+      class="active"
+      onclick="setMode('ENTRY')"
+    >
+      ENTRY
+    </button>
+
+    <button
+      id="foodButton"
+      onclick="setMode('FOOD')"
+    >
+      FOOD
+    </button>
+
+  </div>
+
+
+  <!-- SCANNER -->
+
+  <div id="reader"></div>
+
+
+  <!-- START CAMERA -->
+
+  <button
+    id="startButton"
+    class="start-button"
+    onclick="startScanner()"
+  >
+    START CAMERA
+  </button>
+
+
+  <!-- STATUS -->
+
+  <div
+    id="status"
+    class="status info"
+  >
+
+    <h2>
+      READY
+    </h2>
+
+    <p>
+      Select ENTRY or FOOD and scan the QR code.
+    </p>
+
+  </div>
+
+
+  <div class="footer">
+
+    Beyond the Classroom: AI, Careers & Digital Security<br>
+
+    Manarat International University
+
+  </div>
+
+</div>
+
+
+<script>
+
+
+// ==========================================================
+// APPS SCRIPT BACKEND
+// ==========================================================
+
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxZVMbd6wmyYHlbAXxlf6BU7Wt1ZNyfO7_tD4GGV8g7_1drl99etNMcKEiyq0CeE7Kj/exec";
+
+
+// ==========================================================
+// VARIABLES
+// ==========================================================
+
+let scanner = null;
+
+let scannerRunning = false;
+
+let currentMode = "ENTRY";
+
+let processing = false;
+
+
+// ==========================================================
+// SET MODE
+// ==========================================================
+
+function setMode(mode) {
+
+  currentMode = mode;
+
+  document
+    .getElementById("entryButton")
+    .classList
+    .remove("active");
+
+  document
+    .getElementById("foodButton")
+    .classList
+    .remove("active");
+
+
+  if (mode === "ENTRY") {
+
+    document
+      .getElementById("entryButton")
+      .classList
+      .add("active");
+
+  } else {
+
+    document
+      .getElementById("foodButton")
+      .classList
+      .add("active");
+
+  }
+
+
+  showStatus(
+    "info",
+    mode + " MODE",
+    "Ready to scan."
+  );
+
+}
+
+
+// ==========================================================
+// STATUS
+// ==========================================================
+
+function showStatus(
+  type,
+  title,
+  message
+) {
+
+  const status =
+    document.getElementById("status");
+
+  status.className =
+    "status " + type;
+
+  status.innerHTML =
+
+    "<h2>" +
+    escapeHtml(title) +
+    "</h2>" +
+
+    "<p>" +
+    message +
+    "</p>";
+
+}
+
+
+// ==========================================================
+// START SCANNER
+// ==========================================================
+
+function startScanner() {
+
+  if (scannerRunning) {
+    return;
+  }
+
+
+  if (!scanner) {
+
+    scanner =
+      new Html5Qrcode("reader");
+
+  }
+
+
+  showStatus(
+    "info",
+    "STARTING CAMERA",
+    "Please allow camera access."
+  );
+
+
+  scanner.start(
+
+    {
+      facingMode: "environment"
+    },
+
+    {
+      fps: 10,
+
+      qrbox: {
+        width: 250,
+        height: 250
+      }
+
+    },
+
+    onScanSuccess,
+
+    onScanFailure
+
+  )
+
+  .then(function() {
+
+    scannerRunning = true;
+
+    document
+      .getElementById("startButton")
+      .disabled = true;
+
+    document
+      .getElementById("startButton")
+      .innerText =
+      "CAMERA ACTIVE";
+
+
+    showStatus(
+      "info",
+      currentMode + " MODE",
+      "Point the camera at a QR code."
+    );
+
+  })
+
+  .catch(function(error) {
+
+    console.error(error);
+
+    showStatus(
+      "error",
+      "CAMERA ERROR",
+      "Camera could not be started. Please allow camera permission and try again."
+    );
+
+  });
+
+}
+
+
+// ==========================================================
+// QR SCAN SUCCESS
+// ==========================================================
+
+function onScanSuccess(
+  decodedText,
+  decodedResult
+) {
+
+  if (processing) {
+    return;
+  }
+
+
+  processing = true;
+
+
+  console.log(
+    "QR:",
+    decodedText
+  );
+
+
+  // Stop repeated scans temporarily
+
+  if (scannerRunning) {
+
+    scanner.pause(
+      true
+    );
+
+  }
+
+
+  showStatus(
+    "info",
+    "VERIFYING...",
+    "Checking registration..."
+  );
+
+
+  verifyToken(
+    decodedText
+  );
+
+}
+
+
+// ==========================================================
+// QR SCAN FAILURE
+// ==========================================================
+
+function onScanFailure(error) {
+
+  // Ignore continuous scan errors.
+
+}
+
+
+// ==========================================================
+// VERIFY TOKEN
+// ==========================================================
+
+function verifyToken(token) {
+
+  const url =
+    API_URL +
+
+    "?token=" +
+    encodeURIComponent(token) +
+
+    "&action=" +
+    encodeURIComponent(currentMode) +
+
+    "&callback=handleResponse";
+
+
+  const script =
+    document.createElement("script");
+
+
+  script.src = url;
+
+
+  script.id =
+    "jsonpRequest";
+
+
+  script.onerror =
+    function() {
+
+      showStatus(
+        "error",
+        "CONNECTION ERROR",
+        "Could not connect to the verification server."
+      );
+
+
+      finishProcessing();
+
+    };
+
+
+  document
+    .body
+    .appendChild(script);
+
+}
+
+
+// ==========================================================
+// JSONP RESPONSE
+// ==========================================================
+
+function handleResponse(data) {
+
+  console.log(
+    "Server response:",
+    data
+  );
+
+
+  if (data.success) {
+
+    showStatus(
+
+      "success",
+
+      data.message,
+
+      "<strong>" +
+      escapeHtml(
+        data.name || ""
+      ) +
+      "</strong><br>" +
+
+      "RegID: " +
+      escapeHtml(
+        data.regId || ""
+      ) +
+      "<br>" +
+
+      "Time: " +
+      escapeHtml(
+        data.time || ""
+      )
+
+    );
+
+  }
+
+  else if (data.duplicate) {
+
+    showStatus(
+
+      "warning",
+
+      data.message,
+
+      "<strong>" +
+      escapeHtml(
+        data.name || ""
+      ) +
+      "</strong><br>" +
+
+      "RegID: " +
+      escapeHtml(
+        data.regId || ""
+      ) +
+      "<br>" +
+
+      "Previous Time: " +
+      escapeHtml(
+        data.time || "Not recorded"
+      )
+
+    );
+
+  }
+
+  else {
+
+    showStatus(
+
+      "error",
+
+      "INVALID QR",
+
+      escapeHtml(
+        data.message ||
+        "QR code is not valid."
+      )
+
+    );
+
+  }
+
+
+  finishProcessing();
+
+}
+
+
+// ==========================================================
+// FINISH PROCESSING
+// ==========================================================
+
+function finishProcessing() {
+
+  processing = false;
+
+
+  // Remove JSONP script
+
+  const script =
+    document.getElementById(
+      "jsonpRequest"
+    );
+
+
+  if (script) {
+    script.remove();
+  }
+
+
+  // Resume scanning
+
+  setTimeout(
+    function() {
+
+      if (
+        scanner &&
+        scannerRunning
+      ) {
+
+        try {
+
+          scanner.resume();
+
+        } catch (error) {
+
+          console.log(error);
+
+        }
+
+      }
+
+    },
+
+    2500
+  );
+
+}
+
+
+// ==========================================================
+// ESCAPE HTML
+// ==========================================================
+
+function escapeHtml(text) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    String(text);
+
+  return div.innerHTML;
+
+}
+
+</script>
+
+</body>
+</html>
