@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        MIU CSE Club - Seminar Scanner
+    </title>
+
+
+    <!-- QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                #f4f4f4;
+
+            color:
+                #111;
+
+            min-height:
+                100vh;
+
+        }
+
+
+        .container {
+
+            width:
+                100%;
+
+            max-width:
+                700px;
+
+            margin:
+                auto;
+
+            padding:
+                20px;
+
+        }
+
+
+        .header {
+
+            background:
+                #000;
+
+            color:
+                #fff;
+
+            padding:
+                22px;
+
+            text-align:
+                center;
+
+            border-radius:
+                14px 14px 0 0;
+
+        }
+
+
+        .header h1 {
+
+            font-size:
+                22px;
+
+            margin-bottom:
+                5px;
+
+        }
+
+
+        .header p {
+
+            font-size:
+                13px;
+
+            opacity:
+                0.85;
+
+        }
+
+
+        .scanner-card {
+
+            background:
+                #fff;
+
+            padding:
+                20px;
+
+            border-radius:
+                0 0 14px 14px;
+
+            box-shadow:
+                0 4px 18px
+                rgba(0,0,0,0.08);
+
+        }
+
+
+        #reader {
+
+            width:
+                100%;
+
+            max-width:
+                500px;
+
+            margin:
+                auto;
+
+        }
+
+
+        .instruction {
+
+            text-align:
+                center;
+
+            margin:
+                15px 0;
+
+            color:
+                #555;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .result {
+
+            display:
+                none;
+
+            margin-top:
+                20px;
+
+            border:
+                2px solid #111;
+
+            border-radius:
+                12px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .result-header {
+
+            padding:
+                14px;
+
+            background:
+                #000;
+
+            color:
+                #fff;
+
+            text-align:
+                center;
+
+            font-size:
+                18px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .result-body {
+
+            padding:
+                18px;
+
+        }
+
+
+        .participant {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                110px 1fr;
+
+            gap:
+                8px;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .participant strong {
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .status {
+
+            margin-top:
+                18px;
+
+            padding:
+                14px;
+
+            border-radius:
+                8px;
+
+            text-align:
+                center;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .status.valid {
+
+            background:
+                #e8f5e9;
+
+            color:
+                #1b5e20;
+
+        }
+
+
+        .status.invalid {
+
+            background:
+                #ffebee;
+
+            color:
+                #b71c1c;
+
+        }
+
+
+        .status.warning {
+
+            background:
+                #fff8e1;
+
+            color:
+                #795548;
+
+        }
+
+
+        .buttons {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                10px;
+
+            margin-top:
+                18px;
+
+        }
+
+
+        button {
+
+            border:
+                none;
+
+            padding:
+                14px;
+
+            border-radius:
+                8px;
+
+            font-size:
+                15px;
+
+            font-weight:
+                bold;
+
+            cursor:
+                pointer;
+
+        }
+
+
+        .entry-btn {
+
+            background:
+                #000;
+
+            color:
+                #fff;
+
+        }
+
+
+        .food-btn {
+
+            background:
+                #fff;
+
+            color:
+                #000;
+
+            border:
+                2px solid #000;
+
+        }
+
+
+        button:disabled {
+
+            opacity:
+                0.45;
+
+            cursor:
+                not-allowed;
+
+        }
+
+
+        .reset-btn {
+
+            width:
+                100%;
+
+            margin-top:
+                12px;
+
+            background:
+                #eee;
+
+            color:
+                #111;
+
+        }
+
+
+        .footer {
+
+            text-align:
+                center;
+
+            margin-top:
+                20px;
+
+            color:
+                #777;
+
+            font-size:
+                12px;
+
+        }
+
+
+        @media(max-width:500px) {
+
+            .container {
+
+                padding:
+                    10px;
+
+            }
+
+
+            .buttons {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .participant {
+
+                grid-template-columns:
+                    90px 1fr;
+
+                font-size:
+                    13px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="header">
+
+        <h1>
+            MIU CSE CLUB
+        </h1>
+
+        <p>
+            ICT-Based Seminar 2026
+        </p>
+
+        <p>
+            QR Verification System
+        </p>
+
+    </div>
+
+
+    <div class="scanner-card">
+
+
+        <div id="reader"></div>
+
+
+        <p class="instruction">
+
+            Scan the participant's QR code
+            to verify the event pass.
+
+        </p>
+
+
+        <div
+            id="result"
+            class="result"
+        >
+
+            <div
+                id="resultHeader"
+                class="result-header"
+            >
+                PARTICIPANT
+            </div>
+
+
+            <div class="result-body">
+
+
+                <div
+                    id="participant"
+                    class="participant"
+                >
+
+                </div>
+
+
+                <div
+                    id="status"
+                    class="status"
+                >
+
+                </div>
+
+
+                <div class="buttons">
+
+
+                    <button
+                        id="entryButton"
+                        class="entry-btn"
+                        onclick="markEntry()"
+                    >
+
+                        VERIFY ENTRY
+
+                    </button>
+
+
+                    <button
+                        id="foodButton"
+                        class="food-btn"
+                        onclick="markFood()"
+                    >
+
+                        VERIFY FOOD
+
+                    </button>
+
+
+                </div>
+
+
+                <button
+                    class="reset-btn"
+                    onclick="resetScanner()"
+                >
+
+                    SCAN NEXT PARTICIPANT
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+
+            Beyond the Classroom:
+            AI, Careers & Digital Security
+
+            <br>
+
+            Manarat International University
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/************************************************************
+ * GOOGLE APPS SCRIPT WEB APP URL
+ *
+ * REPLACE THIS URL
+ ************************************************************/
+
+const API_URL =
+    "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+
+/************************************************************
+ * VARIABLES
+ ************************************************************/
+
+let scanner = null;
+
+let currentToken = "";
+
+let currentParticipant = null;
+
+
+/************************************************************
+ * START SCANNER
+ ************************************************************/
+
+function startScanner() {
+
+
+    scanner =
+        new Html5Qrcode(
+            "reader"
+        );
+
+
+    const config = {
+
+        fps: 10,
+
+        qrbox: {
+
+            width: 250,
+
+            height: 250
+
+        }
+
+    };
+
+
+    scanner.start(
+
+        {
+            facingMode:
+                "environment"
+        },
+
+        config,
+
+        onScanSuccess,
+
+        onScanFailure
+
+    )
+    .catch(function(error) {
+
+        showError(
+            "Camera could not be started. Please allow camera permission."
+        );
+
+        console.error(error);
+
+    });
+
+}
+
+
+/************************************************************
+ * QR SCAN SUCCESS
+ ************************************************************/
+
+function onScanSuccess(
+    decodedText
+) {
+
+
+    if (currentToken) {
+
+        return;
+
+    }
+
+
+    currentToken =
+        decodedText.trim();
+
+
+    verifyParticipant(
+        currentToken
+    );
+
+}
+
+
+/************************************************************
+ * QR SCAN FAILURE
+ ************************************************************/
+
+function onScanFailure(
+    error
+) {
+
+    // Ignore continuous scanning errors
+
+}
+
+
+/************************************************************
+ * VERIFY TOKEN
+ ************************************************************/
+
+async function verifyParticipant(
+    token
+) {
+
+
+    showLoading();
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "verify",
+
+                            token:
+                                token
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.success &&
+            data.participant
+        ) {
+
+
+            currentParticipant =
+                data.participant;
+
+
+            showParticipant(
+                data.participant
+            );
+
+
+        } else {
+
+
+            showError(
+                data.message ||
+                "Invalid QR code."
+            );
+
+        }
+
+
+    } catch(error) {
+
+
+        console.error(error);
+
+
+        showError(
+            "Could not connect to verification server."
+        );
+
+    }
+
+}
+
+
+/************************************************************
+ * DISPLAY PARTICIPANT
+ ************************************************************/
+
+function showParticipant(
+    participant
+) {
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .style.display =
+            "block";
+
+
+    document
+        .getElementById(
+            "resultHeader"
+        )
+        .innerText =
+            "VALID PARTICIPANT";
+
+
+    document
+        .getElementById(
+            "participant"
+        )
+        .innerHTML =
+
+        "<strong>Name</strong><span>" +
+        escapeHtml(
+            participant.name
+        ) +
+        "</span>" +
+
+        "<strong>RegID</strong><span>" +
+        escapeHtml(
+            participant.regId
+        ) +
+        "</span>" +
+
+        "<strong>Email</strong><span>" +
+        escapeHtml(
+            participant.email
+        ) +
+        "</span>" +
+
+        "<strong>Entry</strong><span>" +
+        escapeHtml(
+            participant.entry ||
+            "NOT VERIFIED"
+        ) +
+        "</span>" +
+
+        "<strong>Food</strong><span>" +
+        escapeHtml(
+            participant.food ||
+            "NOT COLLECTED"
+        ) +
+        "</span>";
+
+
+    updateStatus(
+        participant
+    );
+
+
+    document
+        .getElementById(
+            "entryButton"
+        )
+        .disabled =
+            participant.entry
+                .toUpperCase() ===
+            "YES";
+
+
+    document
+        .getElementById(
+            "foodButton"
+        )
+        .disabled =
+            participant.food
+                .toUpperCase() ===
+            "YES";
+
+}
+
+
+/************************************************************
+ * STATUS
+ ************************************************************/
+
+function updateStatus(
+    participant
+) {
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    if (
+        participant.entry
+            .toUpperCase() ===
+        "YES"
+    ) {
+
+        status.className =
+            "status warning";
+
+        status.innerText =
+            "ENTRY ALREADY VERIFIED";
+
+    } else {
+
+        status.className =
+            "status valid";
+
+        status.innerText =
+            "QR VERIFIED — READY FOR ENTRY";
+
+    }
+
+}
+
+
+/************************************************************
+ * MARK ENTRY
+ ************************************************************/
+
+async function markEntry() {
+
+
+    if (!currentToken) {
+
+        return;
+
+    }
+
+
+    setButtonsDisabled(
+        true
+    );
+
+
+    await sendAction(
+        "entry"
+    );
+
+}
+
+
+/************************************************************
+ * MARK FOOD
+ ************************************************************/
+
+async function markFood() {
+
+
+    if (!currentToken) {
+
+        return;
+
+    }
+
+
+    setButtonsDisabled(
+        true
+    );
+
+
+    await sendAction(
+        "food"
+    );
+
+}
+
+
+/************************************************************
+ * SEND ACTION TO SERVER
+ ************************************************************/
+
+async function sendAction(
+    action
+) {
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                action,
+
+                            token:
+                                currentToken
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.participant
+        ) {
+
+
+            currentParticipant =
+                data.participant;
+
+
+            showParticipant(
+                data.participant
+            );
+
+        }
+
+
+        showActionMessage(
+            data
+        );
+
+
+    } catch(error) {
+
+
+        console.error(error);
+
+
+        showError(
+            "Server connection failed."
+        );
+
+
+        setButtonsDisabled(
+            false
+        );
+
+    }
+
+}
+
+
+/************************************************************
+ * ACTION MESSAGE
+ ************************************************************/
+
+function showActionMessage(
+    data
+) {
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    if (
+        data.status ===
+        "ENTRY_SUCCESS"
+    ) {
+
+        status.className =
+            "status valid";
+
+        status.innerText =
+            "✓ ENTRY VERIFIED SUCCESSFULLY";
+
+    }
+
+
+    else if (
+        data.status ===
+        "ALREADY_ENTERED"
+    ) {
+
+        status.className =
+            "status warning";
+
+        status.innerText =
+            "⚠ ENTRY ALREADY VERIFIED";
+
+    }
+
+
+    else if (
+        data.status ===
+        "FOOD_SUCCESS"
+    ) {
+
+        status.className =
+            "status valid";
+
+        status.innerText =
+            "✓ FOOD VERIFIED SUCCESSFULLY";
+
+    }
+
+
+    else if (
+        data.status ===
+        "FOOD_ALREADY_COLLECTED"
+    ) {
+
+        status.className =
+            "status warning";
+
+        status.innerText =
+            "⚠ FOOD ALREADY COLLECTED";
+
+    }
+
+
+    else if (
+        data.status ===
+        "ENTRY_REQUIRED"
+    ) {
+
+        status.className =
+            "status warning";
+
+        status.innerText =
+            "⚠ ENTRY VERIFICATION REQUIRED FIRST";
+
+    }
+
+
+    else {
+
+        status.className =
+            "status invalid";
+
+        status.innerText =
+            data.message ||
+            "Verification failed.";
+
+    }
+
+
+    setButtonsDisabled(
+        false
+    );
+
+}
+
+
+/************************************************************
+ * LOADING
+ ************************************************************/
+
+function showLoading() {
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .style.display =
+            "block";
+
+
+    document
+        .getElementById(
+            "resultHeader"
+        )
+        .innerText =
+            "CHECKING QR CODE";
+
+
+    document
+        .getElementById(
+            "participant"
+        )
+        .innerHTML =
+            "";
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    status.className =
+        "status";
+
+
+    status.innerText =
+        "Please wait...";
+
+
+    setButtonsDisabled(
+        true
+    );
+
+}
+
+
+/************************************************************
+ * ERROR
+ ************************************************************/
+
+function showError(
+    message
+) {
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .style.display =
+            "block";
+
+
+    document
+        .getElementById(
+            "resultHeader"
+        )
+        .innerText =
+            "INVALID";
+
+
+    document
+        .getElementById(
+            "participant"
+        )
+        .innerHTML =
+            "";
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    status.className =
+        "status invalid";
+
+
+    status.innerText =
+        message;
+
+
+    setButtonsDisabled(
+        true
+    );
+
+}
+
+
+/************************************************************
+ * RESET
+ ************************************************************/
+
+async function resetScanner() {
+
+
+    currentToken =
+        "";
+
+    currentParticipant =
+        null;
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .style.display =
+            "none";
+
+
+    setButtonsDisabled(
+        false
+    );
+
+}
+
+
+/************************************************************
+ * BUTTON CONTROL
+ ************************************************************/
+
+function setButtonsDisabled(
+    disabled
+) {
+
+
+    document
+        .getElementById(
+            "entryButton"
+        )
+        .disabled =
+            disabled;
+
+
+    document
+        .getElementById(
+            "foodButton"
+        )
+        .disabled =
+            disabled;
+
+}
+
+
+/************************************************************
+ * HTML ESCAPE
+ ************************************************************/
+
+function escapeHtml(
+    text
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text || "";
+
+
+    return div.innerHTML;
+
+}
+
+
+/************************************************************
+ * START
+ ************************************************************/
+
+window.onload =
+    startScanner;
+
+
+</script>
+
+
+</body>
+
+</html>
