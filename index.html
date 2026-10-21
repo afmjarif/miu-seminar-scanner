@@ -2,22 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIU CSE Club - QR Scanner</title>
 
   <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
-
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -37,15 +29,8 @@
       margin-bottom: 18px;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 25px;
-    }
-
-    .header p {
-      margin: 6px 0;
-      font-size: 14px;
-    }
+    .header h1 { margin: 0; font-size: 22px; }
+    .header p  { margin: 6px 0; font-size: 14px; }
 
     .club {
       font-weight: bold;
@@ -54,18 +39,18 @@
 
     .mode-buttons {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 15px;
     }
 
     .mode-buttons button {
       flex: 1;
-      padding: 13px;
+      padding: 13px 6px;
       border: 2px solid #111;
       background: white;
       color: #111;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -91,34 +76,13 @@
       border: 1px solid #ddd;
     }
 
-    .status h2 {
-      margin: 0 0 8px;
-      font-size: 21px;
-    }
+    .status h2 { margin: 0 0 8px; font-size: 20px; }
+    .status p  { margin: 5px 0; }
 
-    .status p {
-      margin: 5px 0;
-    }
-
-    .success {
-      background: #dff5e3;
-      border-color: #28a745;
-    }
-
-    .error {
-      background: #ffe1e1;
-      border-color: #dc3545;
-    }
-
-    .warning {
-      background: #fff3cd;
-      border-color: #ffc107;
-    }
-
-    .info {
-      background: #e8f0fe;
-      border-color: #4285f4;
-    }
+    .success { background: #dff5e3; border-color: #28a745; }
+    .error   { background: #ffe1e1; border-color: #dc3545; }
+    .warning { background: #fff3cd; border-color: #ffc107; }
+    .info    { background: #e8f0fe; border-color: #4285f4; }
 
     .start-button {
       width: 100%;
@@ -133,9 +97,7 @@
       cursor: pointer;
     }
 
-    .start-button:disabled {
-      opacity: 0.5;
-    }
+    .start-button:disabled { opacity: 0.5; }
 
     .footer {
       text-align: center;
@@ -143,7 +105,6 @@
       font-size: 12px;
       color: #555;
     }
-
   </style>
 </head>
 
@@ -152,84 +113,35 @@
 <div class="container">
 
   <div class="header">
-
-    <div class="club">
-      MIU CSE CLUB
-    </div>
-
-    <h1>
-      ICT-Based Seminar 2026
-    </h1>
-
-    <p>
-      QR Verification System
-    </p>
-
+    <div class="club">MIU CSE CLUB</div>
+    <h1>MIU CSE Club AI Summit 2026</h1>
+    <p>QR Verification System</p>
   </div>
-
 
   <!-- MODE -->
-
   <div class="mode-buttons">
-
-    <button
-      id="entryButton"
-      class="active"
-      onclick="setMode('ENTRY')"
-    >
-      ENTRY
-    </button>
-
-    <button
-      id="foodButton"
-      onclick="setMode('FOOD')"
-    >
-      FOOD
-    </button>
-
+    <button id="entryButton" class="active" onclick="setMode('ENTRY')">ENTRY</button>
+    <button id="foodButton"  onclick="setMode('FOOD')">FOOD</button>
+    <button id="giftButton"  onclick="setMode('GIFT')">GIFT</button>
   </div>
 
-
   <!-- SCANNER -->
-
   <div id="reader"></div>
 
-
   <!-- START CAMERA -->
-
-  <button
-    id="startButton"
-    class="start-button"
-    onclick="startScanner()"
-  >
+  <button id="startButton" class="start-button" onclick="startScanner()">
     START CAMERA
   </button>
 
-
   <!-- STATUS -->
-
-  <div
-    id="status"
-    class="status info"
-  >
-
-    <h2>
-      READY
-    </h2>
-
-    <p>
-      Select ENTRY or FOOD and scan the QR code.
-    </p>
-
+  <div id="status" class="status info">
+    <h2>READY</h2>
+    <p>Select a mode and scan the QR code.</p>
   </div>
 
-
   <div class="footer">
-
-    Beyond the Classroom: AI, Careers & Digital Security<br>
-
+    MIU CSE Club AI Summit 2026<br>
     Manarat International University
-
   </div>
 
 </div>
@@ -237,11 +149,9 @@
 
 <script>
 
-
 // ==========================================================
 // APPS SCRIPT BACKEND
 // ==========================================================
-
 const API_URL =
   "https://script.google.com/macros/s/AKfycbzY2-Vrn2tmgsLO8H1g6tOy7tTusEWT6ZyFcsWkf3C3Q2oVz1-RC-h_df0lTst9ph-aWA/exec";
 
@@ -249,444 +159,199 @@ const API_URL =
 // ==========================================================
 // VARIABLES
 // ==========================================================
-
 let scanner = null;
-
 let scannerRunning = false;
-
 let currentMode = "ENTRY";
-
 let processing = false;
 
 
 // ==========================================================
 // SET MODE
 // ==========================================================
-
 function setMode(mode) {
-
   currentMode = mode;
 
-  document
-    .getElementById("entryButton")
-    .classList
-    .remove("active");
+  ["ENTRY", "FOOD", "GIFT"].forEach(function(m) {
+    var btn = document.getElementById(m.toLowerCase() + "Button");
+    if (btn) btn.classList.remove("active");
+  });
 
-  document
-    .getElementById("foodButton")
-    .classList
-    .remove("active");
+  var active = document.getElementById(mode.toLowerCase() + "Button");
+  if (active) active.classList.add("active");
 
-
-  if (mode === "ENTRY") {
-
-    document
-      .getElementById("entryButton")
-      .classList
-      .add("active");
-
-  } else {
-
-    document
-      .getElementById("foodButton")
-      .classList
-      .add("active");
-
-  }
-
-
-  showStatus(
-    "info",
-    mode + " MODE",
-    "Ready to scan."
-  );
-
+  showStatus("info", mode + " MODE", "Ready to scan.");
 }
 
 
 // ==========================================================
 // STATUS
 // ==========================================================
-
-function showStatus(
-  type,
-  title,
-  message
-) {
-
-  const status =
-    document.getElementById("status");
-
-  status.className =
-    "status " + type;
-
+function showStatus(type, title, message) {
+  var status = document.getElementById("status");
+  status.className = "status " + type;
   status.innerHTML =
-
-    "<h2>" +
-    escapeHtml(title) +
-    "</h2>" +
-
-    "<p>" +
-    message +
-    "</p>";
-
+    "<h2>" + escapeHtml(title) + "</h2>" +
+    "<p>" + message + "</p>";
 }
 
 
 // ==========================================================
 // START SCANNER
 // ==========================================================
-
 function startScanner() {
+  if (scannerRunning) return;
 
-  if (scannerRunning) {
-    return;
-  }
+  if (!scanner) scanner = new Html5Qrcode("reader");
 
-
-  if (!scanner) {
-
-    scanner =
-      new Html5Qrcode("reader");
-
-  }
-
-
-  showStatus(
-    "info",
-    "STARTING CAMERA",
-    "Please allow camera access."
-  );
-
+  showStatus("info", "STARTING CAMERA", "Please allow camera access.");
 
   scanner.start(
-
-    {
-      facingMode: "environment"
-    },
-
-    {
-      fps: 10,
-
-      qrbox: {
-        width: 250,
-        height: 250
-      }
-
-    },
-
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
     onScanSuccess,
-
     onScanFailure
-
   )
-
   .then(function() {
-
     scannerRunning = true;
-
-    document
-      .getElementById("startButton")
-      .disabled = true;
-
-    document
-      .getElementById("startButton")
-      .innerText =
-      "CAMERA ACTIVE";
-
-
-    showStatus(
-      "info",
-      currentMode + " MODE",
-      "Point the camera at a QR code."
-    );
-
+    document.getElementById("startButton").disabled = true;
+    document.getElementById("startButton").innerText = "CAMERA ACTIVE";
+    showStatus("info", currentMode + " MODE", "Point the camera at a QR code.");
   })
-
   .catch(function(error) {
-
     console.error(error);
-
-    showStatus(
-      "error",
-      "CAMERA ERROR",
-      "Camera could not be started. Please allow camera permission and try again."
-    );
-
+    showStatus("error", "CAMERA ERROR",
+      "Camera could not be started. Please allow camera permission and try again.");
   });
-
 }
 
 
 // ==========================================================
 // QR SCAN SUCCESS
 // ==========================================================
-
-function onScanSuccess(
-  decodedText,
-  decodedResult
-) {
-
-  if (processing) {
-    return;
-  }
-
-
+function onScanSuccess(decodedText, decodedResult) {
+  if (processing) return;
   processing = true;
 
-
-  console.log(
-    "QR:",
-    decodedText
-  );
-
-
-  // Stop repeated scans temporarily
+  console.log("QR:", decodedText);
 
   if (scannerRunning) {
-
-    scanner.pause(
-      true
-    );
-
+    try { scanner.pause(true); } catch (e) { console.log(e); }
   }
 
-
-  showStatus(
-    "info",
-    "VERIFYING...",
-    "Checking registration..."
-  );
-
-
-  verifyToken(
-    decodedText
-  );
-
+  showStatus("info", "VERIFYING...", "Checking registration...");
+  verifyToken(decodedText);
 }
 
 
 // ==========================================================
 // QR SCAN FAILURE
 // ==========================================================
-
 function onScanFailure(error) {
-
   // Ignore continuous scan errors.
-
 }
 
 
 // ==========================================================
 // VERIFY TOKEN
 // ==========================================================
-
 function verifyToken(token) {
-
   const url =
     API_URL +
-
-    "?token=" +
-    encodeURIComponent(token) +
-
-    "&action=" +
-    encodeURIComponent(currentMode) +
-
+    "?token=" + encodeURIComponent(token) +
+    "&action=" + encodeURIComponent(currentMode) +
     "&callback=handleResponse";
 
-
-  const script =
-    document.createElement("script");
-
-
+  const script = document.createElement("script");
   script.src = url;
+  script.id  = "jsonpRequest";
 
+  script.onerror = function() {
+    showStatus("error", "CONNECTION ERROR",
+      "Could not connect to the verification server.");
+    finishProcessing();
+  };
 
-  script.id =
-    "jsonpRequest";
-
-
-  script.onerror =
-    function() {
-
-      showStatus(
-        "error",
-        "CONNECTION ERROR",
-        "Could not connect to the verification server."
-      );
-
-
-      finishProcessing();
-
-    };
-
-
-  document
-    .body
-    .appendChild(script);
-
+  document.body.appendChild(script);
 }
 
 
 // ==========================================================
 // JSONP RESPONSE
 // ==========================================================
-
 function handleResponse(data) {
+  console.log("Server response:", data);
 
-  console.log(
-    "Server response:",
-    data
-  );
-
-
+  /* ---------- SUCCESS ---------- */
   if (data.success) {
-
     showStatus(
-
       "success",
-
       data.message,
-
-      "<strong>" +
-      escapeHtml(
-        data.name || ""
-      ) +
-      "</strong><br>" +
-
-      "RegID: " +
-      escapeHtml(
-        data.regId || ""
-      ) +
-      "<br>" +
-
-      "Time: " +
-      escapeHtml(
-        data.time || ""
-      )
-
+      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
+      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
+      "Time: "  + escapeHtml(data.time  || "")
     );
-
   }
 
+  /* ---------- DUPLICATE ---------- */
   else if (data.duplicate) {
-
     showStatus(
-
       "warning",
-
       data.message,
-
-      "<strong>" +
-      escapeHtml(
-        data.name || ""
-      ) +
-      "</strong><br>" +
-
-      "RegID: " +
-      escapeHtml(
-        data.regId || ""
-      ) +
-      "<br>" +
-
-      "Previous Time: " +
-      escapeHtml(
-        data.time || "Not recorded"
-      )
-
+      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
+      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
+      "Previous Time: " + escapeHtml(data.time || "Not recorded")
     );
-
   }
 
-  else {
-
+  /* ---------- PAYMENT BLOCKED ---------- */
+  else if (data.paymentBlocked) {
     showStatus(
-
-      "error",
-
-      "INVALID QR",
-
-      escapeHtml(
-        data.message ||
-        "QR code is not valid."
-      )
-
+      "warning",
+      "⚠️ PAYMENT NOT VERIFIED",
+      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
+      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
+      "Status: " + escapeHtml(data.paymentStatus || "Pending") + "<br><br>" +
+      "<small>Please visit the registration desk to complete payment verification.</small>"
     );
-
   }
 
+  /* ---------- INVALID ---------- */
+  else {
+    showStatus(
+      "error",
+      "INVALID QR",
+      escapeHtml(data.message || "QR code is not valid.")
+    );
+  }
 
   finishProcessing();
-
 }
 
 
 // ==========================================================
 // FINISH PROCESSING
 // ==========================================================
-
 function finishProcessing() {
-
   processing = false;
 
+  const script = document.getElementById("jsonpRequest");
+  if (script) script.remove();
 
-  // Remove JSONP script
-
-  const script =
-    document.getElementById(
-      "jsonpRequest"
-    );
-
-
-  if (script) {
-    script.remove();
-  }
-
-
-  // Resume scanning
-
-  setTimeout(
-    function() {
-
-      if (
-        scanner &&
-        scannerRunning
-      ) {
-
-        try {
-
-          scanner.resume();
-
-        } catch (error) {
-
-          console.log(error);
-
-        }
-
-      }
-
-    },
-
-    2500
-  );
-
+  setTimeout(function() {
+    if (scanner && scannerRunning) {
+      try { scanner.resume(); } catch (error) { console.log(error); }
+    }
+  }, 2500);
 }
 
 
 // ==========================================================
 // ESCAPE HTML
 // ==========================================================
-
 function escapeHtml(text) {
-
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    String(text);
-
+  const div = document.createElement("div");
+  div.textContent = String(text);
   return div.innerHTML;
-
 }
 
 </script>
