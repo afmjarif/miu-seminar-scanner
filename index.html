@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>MIU CSE Club - QR Scanner</title>
+  <title>MIU CSE Club - AI Summit Scanner</title>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  
   <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
@@ -18,11 +21,11 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100dvh; /* Modern full viewport height for Android */
-      overflow: hidden; /* Prevents scrolling */
-      font-family: 'Inter', Arial, sans-serif;
-      background: #0A2540; /* Dark background to blend with camera */
-      color: #111;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: #060C14; /* Deep premium dark */
+      color: #ffffff;
     }
 
     .app-container {
@@ -30,134 +33,246 @@
       flex-direction: column;
       height: 100dvh;
       width: 100vw;
+      background: radial-gradient(circle at top, #0A2540 0%, #060C14 100%);
     }
 
-    /* ✅ Top Header & Buttons */
-    .top-section {
+    /* ✅ Premium Top Bar */
+    .top-bar {
       flex-shrink: 0;
-      background: #F8FAFC;
-      padding: 10px 10px 8px;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: calc(15px + env(safe-area-inset-top)) 20px 15px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
       z-index: 10;
     }
 
-    .mode-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-    .mode-buttons.row2 {
-      grid-template-columns: repeat(2, 1fr);
+    /* Custom Select Dropdown */
+    .select-wrapper {
+      position: relative;
+      flex: 1;
     }
 
-    .mode-buttons button {
-      padding: 10px 2px;
-      border: 2px solid #E2E8F0;
-      background: white;
-      color: #64748B;
-      border-radius: 8px;
-      font-size: 12px;
+    .select-wrapper::after {
+      content: '▼';
+      font-size: 10px;
+      color: #00C2FF;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .mode-select {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 194, 255, 0.3);
+      background: rgba(10, 37, 64, 0.6);
+      backdrop-filter: blur(10px);
+      color: #00C2FF;
+      font-size: 14px;
       font-weight: 800;
-      cursor: pointer;
-      transition: 0.1s;
+      letter-spacing: 1px;
+      appearance: none;
+      outline: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    .mode-buttons button.active {
+    .mode-select option {
       background: #0A2540;
-      border-color: #0A2540;
       color: white;
     }
-    
-    .mode-buttons button.active.info-btn {
-      background: #00C2FF;
-      border-color: #00C2FF;
-      color: #0A2540;
+
+    .btn-start {
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #00C2FF 0%, #007BFF 100%);
+      color: #000;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 194, 255, 0.4);
+      transition: 0.2s;
     }
 
-    /* ✅ Middle Camera Section */
+    .btn-start:active { transform: scale(0.95); }
+    .btn-start:disabled {
+      background: #1E293B;
+      color: #64748B;
+      box-shadow: none;
+    }
+
+    /* ✅ Camera Section */
     .camera-section {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
-      background: #000;
+      padding: 15px;
       position: relative;
+    }
+
+    /* Glowing Scanner Frame */
+    .scanner-frame {
+      width: 100%;
+      max-width: 380px;
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      position: relative;
+      padding: 3px;
+      background: linear-gradient(135deg, #00C2FF, #0A2540);
+      box-shadow: 0 0 30px rgba(0, 194, 255, 0.15);
     }
 
     #reader {
       width: 100%;
       height: 100%;
-      border: none;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #000;
     }
 
-    /* Hide the default HTML5-Qrcode UI text/icons if possible */
-    #reader__dashboard_section_csr {
-      display: none !important;
-    }
+    /* Hide default HTML5-QRCode UI */
+    #reader__dashboard_section_csr { display: none !important; }
 
-    /* ✅ Bottom Status & Controls */
+    /* ✅ Bottom Status & Branding */
     .bottom-section {
       flex-shrink: 0;
-      background: #F8FAFC;
-      padding: 12px 15px calc(12px + env(safe-area-inset-bottom));
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-      z-index: 10;
+      padding: 0 20px calc(20px + env(safe-area-inset-bottom));
+      text-align: center;
     }
 
-    .status {
-      padding: 12px;
-      border-radius: 12px;
-      background: white;
-      text-align: center;
-      border: 2px solid #E2E8F0;
-      margin-bottom: 10px;
-      min-height: 90px; /* Prevents layout jumping */
+    .status-pill {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94A3B8;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: 0.3s;
+    }
+
+    /* ✅ Premium Branding */
+    .branding {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 15px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      align-items: center;
+      gap: 4px;
+    }
+    .branding .presented {
+      font-size: 9px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 800;
+    }
+    .branding .title {
+      font-size: 20px;
+      color: #ffffff;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .branding .club {
+      font-size: 11px;
+      color: #00C2FF;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
-    .status h2 { margin: 0 0 4px; font-size: 18px; font-weight: 900; letter-spacing: 0.5px;}
-    .status p  { margin: 2px 0; font-size: 13px; line-height: 1.4; font-weight: 600; color: #333;}
-    .status strong { font-size: 16px; color: #0A2540; display: block; margin-top: 2px;}
+    /* ✅ Popup Bottom Sheet */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(6, 12, 20, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
 
-    .success { background: #ECFDF5; border-color: #10B981; }
-    .success h2 { color: #065F46; }
-    .success strong { color: #10B981; }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-    .error   { background: #FEF2F2; border-color: #EF4444; }
-    .error h2 { color: #991B1B; }
-
-    .warning { background: #FFFBEB; border-color: #F59E0B; }
-    .warning h2 { color: #92400E; }
-
-    .info    { background: #EFF6FF; border-color: #3B82F6; }
-    .info h2 { color: #1E40AF; }
-
-    .start-button {
+    .modal-card {
+      background: #0F172A; /* Dark slate */
       width: 100%;
-      padding: 16px;
-      border: none;
+      max-width: 500px;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      padding: 30px 25px calc(30px + env(safe-area-inset-bottom));
+      text-align: center;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-height: 90vh;
+      overflow-y: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -20px 40px rgba(0,0,0,0.5);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
+
+    /* Drag handle indicator */
+    .drag-handle {
+      width: 40px;
+      height: 4px;
+      background: #334155;
       border-radius: 10px;
-      background: #0A2540;
-      color: white;
+      margin: 0 auto 20px auto;
+    }
+
+    /* Modal Badges */
+    .badge { 
+      padding: 8px 24px; 
+      border-radius: 50px; 
+      font-weight: 900; 
+      font-size: 14px; 
+      display: inline-block; 
+      margin-bottom: 20px; 
+      letter-spacing: 2px; 
+    }
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-error { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-info { background: rgba(59, 130, 246, 0.15); color: #3B82F6; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    .modal-card h1 { color: #ffffff; font-size: 24px; font-weight: 900; margin-bottom: 25px; line-height: 1.3; }
+
+    /* Info Table */
+    .info-table { width: 100%; text-align: left; border-collapse: collapse; margin-bottom: 25px;}
+    .info-table td { padding: 14px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
+    .info-table td:first-child { color: #64748B; font-weight: 600; width: 40%; }
+    .info-table td:last-child { color: #ffffff; font-weight: 800; text-align: right; }
+
+    .btn-close {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00C2FF 0%, #007BFF 100%);
+      color: #000;
       font-size: 16px;
       font-weight: 900;
+      letter-spacing: 1px;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(10,37,64,0.2);
-      transition: 0.2s;
-    }
-
-    .start-button:disabled { 
-      opacity: 0.5; 
-      box-shadow: none; 
-      background: #64748B;
+      box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
     }
   </style>
 </head>
@@ -166,43 +281,53 @@
 
 <div class="app-container">
 
-  <!-- TOP: Buttons -->
-  <div class="top-section">
-    <div class="mode-buttons">
-      <button id="entryButton" class="active" onclick="setMode('ENTRY')">ENTRY</button>
-      <button id="foodButton" onclick="setMode('FOOD')">FOOD</button>
-      <button id="snacksButton" onclick="setMode('SNACKS')">SNACKS</button>
+  <!-- ✅ Premium Top Bar -->
+  <div class="top-bar">
+    <div class="select-wrapper">
+      <select id="modeSelect" class="mode-select" onchange="setMode()">
+        <option value="ENTRY">🛡️ ENTRY (Gate)</option>
+        <option value="FOOD">🍽️ FOOD (Lunch)</option>
+        <option value="SNACKS">☕ SNACKS</option>
+        <option value="GIFT">🎁 GIFT / ID CARD</option>
+        <option value="INFO">ℹ️ INFO (Details)</option>
+      </select>
     </div>
-    <div class="mode-buttons row2">
-      <button id="giftButton" onclick="setMode('GIFT')">GIFT</button>
-      <button id="infoButton" class="info-btn" onclick="setMode('INFO')">INFO</button>
-    </div>
+    <button id="startButton" class="btn-start" onclick="startScanner()">START</button>
   </div>
 
-  <!-- MIDDLE: Camera -->
+  <!-- ✅ Centered Camera View -->
   <div class="camera-section">
-    <div id="reader"></div>
+    <div class="scanner-frame">
+      <div id="reader"></div>
+    </div>
   </div>
 
-  <!-- BOTTOM: Status & Start Button -->
+  <!-- ✅ Bottom Status & Branding -->
   <div class="bottom-section">
-    
-    <div id="status" class="status info">
-      <h2>READY</h2>
-      <p>Select a mode and tap Start Camera.</p>
+    <div class="status-pill" id="statusText">
+      Select a mode and tap START
     </div>
 
-    <button id="startButton" class="start-button" onclick="startScanner()">
-      📷 START CAMERA
-    </button>
-
+    <!-- ✅ Premium Branding -->
+    <div class="branding">
+      <div class="presented">MIU CSE Club Presents</div>
+      <div class="title">AI Summit 2026</div>
+      <div class="club">MIU CSE</div>
+    </div>
   </div>
 
 </div>
 
+<!-- ✅ Popup Modal -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-card" id="modalContent">
+    <div class="drag-handle"></div>
+    <!-- Content injected via JS -->
+  </div>
+</div>
+
 
 <script>
-
 const API_URL = "https://script.google.com/macros/s/AKfycbzY2-Vrn2tmgsLO8H1g6tOy7tTusEWT6ZyFcsWkf3C3Q2oVz1-RC-h_df0lTst9ph-aWA/exec";
 
 let scanner = null;
@@ -210,76 +335,57 @@ let scannerRunning = false;
 let currentMode = "ENTRY";
 let processing = false;
 
-// ✅ Force Screen to stay awake (if supported by browser)
-if ('wakeLock' in navigator) {
-  navigator.wakeLock.request('screen').catch(err => console.log('Wake Lock failed'));
+function setMode() {
+  currentMode = document.getElementById("modeSelect").value;
+  updateStatus("Mode set to " + currentMode);
 }
 
-function setMode(mode) {
-  currentMode = mode;
-  var modes = ["ENTRY", "FOOD", "SNACKS", "GIFT", "INFO"];
-  
-  modes.forEach(function(m) {
-    var btn = document.getElementById(m.toLowerCase() + "Button");
-    if (btn) btn.classList.remove("active");
-  });
-
-  var active = document.getElementById(mode.toLowerCase() + "Button");
-  if (active) active.classList.add("active");
-
-  showStatus("info", mode + " MODE", "Ready to scan.");
-}
-
-function showStatus(type, title, message) {
-  var status = document.getElementById("status");
-  status.className = "status " + type;
-  status.innerHTML = "<h2>" + escapeHtml(title) + "</h2><p>" + message + "</p>";
+function updateStatus(text) {
+  document.getElementById("statusText").innerText = text;
 }
 
 function startScanner() {
   if (scannerRunning) return;
   if (!scanner) scanner = new Html5Qrcode("reader");
 
-  showStatus("info", "STARTING CAMERA", "Please allow camera access.");
+  document.getElementById("startButton").disabled = true;
+  document.getElementById("startButton").innerText = "...";
+  updateStatus("Starting camera...");
 
-  // Start camera full screen
   scanner.start(
     { facingMode: "environment" },
     { 
       fps: 15, 
-      qrbox: function(viewfinderWidth, viewfinderHeight) {
-        let minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-        let qrboxSize = Math.floor(minEdge * 0.7); // Box takes 70% of the screen
-        return { width: qrboxSize, height: qrboxSize };
-      }
+      qrbox: 250 
     },
     onScanSuccess,
     onScanFailure
   )
   .then(function() {
     scannerRunning = true;
-    document.getElementById("startButton").disabled = true;
-    document.getElementById("startButton").innerText = "🟢 CAMERA ACTIVE";
-    showStatus("info", currentMode + " MODE", "Point the camera at a QR code.");
+    document.getElementById("startButton").innerText = "ACTIVE";
+    updateStatus("Camera active. Point at QR code.");
   })
   .catch(function(error) {
-    console.error(error);
-    showStatus("error", "CAMERA ERROR", "Camera could not be started. Please allow permission.");
+    alert("Camera Error: Please allow camera permissions and refresh.");
+    document.getElementById("startButton").disabled = false;
+    document.getElementById("startButton").innerText = "START";
+    updateStatus("Camera failed to start.");
     scannerRunning = false;
   });
 }
 
-function onScanSuccess(decodedText, decodedResult) {
+function onScanSuccess(decodedText) {
   if (processing) return;
   processing = true;
   
-  // Vibrate phone if supported (feels like a real scanner)
   if (navigator.vibrate) navigator.vibrate(100);
 
   if (scannerRunning) {
-    try { scanner.pause(true); } catch (e) { console.log(e); }
+    try { scanner.pause(true); } catch (e) {}
   }
-  showStatus("info", "VERIFYING...", "Checking database...");
+  
+  updateStatus("Verifying...");
   verifyToken(decodedText);
 }
 
@@ -291,75 +397,92 @@ function verifyToken(token) {
   script.src = url;
   script.id  = "jsonpRequest";
   script.onerror = function() {
-    showStatus("error", "CONNECTION ERROR", "Could not connect to the server.");
-    finishProcessing();
+    showModal("error", "CONNECTION ERROR", "Could not connect to the server.");
   };
   document.body.appendChild(script);
 }
 
-function handleResponse(data) {
-  /* SUCCESS */
-  if (data.success && currentMode !== "INFO") {
-    showStatus("success", data.message,
-      "<strong>" + escapeHtml(data.name || "") + "</strong>" +
-      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "Time: "  + escapeHtml(data.time  || "")
-    );
-  }
-  /* INFO */
-  else if (data.success && currentMode === "INFO") {
-    showStatus("info", "PARTICIPANT INFO",
-      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
-      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "ID: " + escapeHtml(data.studentId || "N/A") + "<br>" +
-      "Dept: " + escapeHtml(data.department || "N/A") + "<br>" +
-      "Batch: " + escapeHtml(data.batch || "N/A") + "<br>" +
-      "Phone: " + escapeHtml(data.phone || "N/A")
-    );
-  }
-  /* DUPLICATE */
-  else if (data.duplicate) {
-    showStatus("warning", data.message,
-      "<strong>" + escapeHtml(data.name || "") + "</strong>" +
-      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "Prev Time: " + escapeHtml(data.time || "Not recorded")
-    );
-  }
-  /* PAYMENT BLOCKED */
-  else if (data.paymentBlocked) {
-    showStatus("warning", "⚠️ PAYMENT NOT VERIFIED",
-      "<strong>" + escapeHtml(data.name || "") + "</strong>" +
-      "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "Status: " + escapeHtml(data.paymentStatus || "Pending") + "<br>" +
-      "<small>Visit registration desk.</small>"
-    );
-  }
-  /* INVALID */
-  else {
-    showStatus("error", "INVALID QR", escapeHtml(data.message || "QR code is not valid."));
-  }
-
-  finishProcessing();
+function showModal(type, title, contentHtml) {
+  const modal = document.getElementById("resultModal");
+  const content = document.getElementById("modalContent");
+  
+  let badgeClass = "badge-" + type;
+  
+  content.innerHTML = `
+    <div class="drag-handle"></div>
+    <div class="badge ${badgeClass}">${title}</div>
+    ${contentHtml}
+    <button class="btn-close" onclick="closeModal()">SCAN NEXT</button>
+  `;
+  
+  modal.classList.add("active");
+  updateStatus("Scan complete.");
 }
 
-function finishProcessing() {
-  processing = false;
+function closeModal() {
+  const modal = document.getElementById("resultModal");
+  modal.classList.remove("active");
+  
+  setTimeout(() => {
+    processing = false;
+    if (scanner && scannerRunning) {
+      try { scanner.resume(); } catch (error) {}
+      updateStatus("Camera active. Point at QR code.");
+    }
+  }, 300);
+}
+
+function handleResponse(data) {
   const script = document.getElementById("jsonpRequest");
   if (script) script.remove();
 
-  setTimeout(function() {
-    if (scanner && scannerRunning) {
-      try { scanner.resume(); } catch (error) { console.log(error); }
-    }
-  }, 2000); // 2 second cooldown before scanning next person
+  if (data.success && currentMode !== "INFO") {
+    showModal("success", "VERIFIED", `
+      <h1>${data.name || "N/A"}</h1>
+      <table class="info-table">
+        <tr><td>Registration ID</td><td>${data.regId || "N/A"}</td></tr>
+        <tr><td>Action</td><td>${data.action || currentMode}</td></tr>
+        <tr><td>Time</td><td>${data.time || "N/A"}</td></tr>
+      </table>
+    `);
+  }
+  else if (data.success && currentMode === "INFO") {
+    showModal("info", "INFO FOUND", `
+      <h1>${data.name || "N/A"}</h1>
+      <table class="info-table">
+        <tr><td>Registration ID</td><td>${data.regId || "N/A"}</td></tr>
+        <tr><td>Student ID</td><td>${data.studentId || "N/A"}</td></tr>
+        <tr><td>Department</td><td>${data.department || "N/A"}</td></tr>
+        <tr><td>Batch</td><td>${data.batch || "N/A"}</td></tr>
+        <tr><td>Phone</td><td>${data.phone || "N/A"}</td></tr>
+      </table>
+    `);
+  }
+  else if (data.duplicate) {
+    showModal("warning", "ALREADY DONE", `
+      <h1>${data.name || "N/A"}</h1>
+      <table class="info-table">
+        <tr><td>Registration ID</td><td>${data.regId || "N/A"}</td></tr>
+        <tr><td>Previous Time</td><td>${data.time || "N/A"}</td></tr>
+      </table>
+    `);
+  }
+  else if (data.paymentBlocked) {
+    showModal("warning", "PAYMENT PENDING", `
+      <h1>${data.name || "N/A"}</h1>
+      <table class="info-table">
+        <tr><td>Registration ID</td><td>${data.regId || "N/A"}</td></tr>
+        <tr><td>Payment Status</td><td style="color:#EF4444">${data.paymentStatus || "Pending"}</td></tr>
+      </table>
+    `);
+  }
+  else {
+    showModal("error", "INVALID QR", `
+      <h1 style="color:#EF4444;">Verification Failed</h1>
+      <p style="color:#94A3B8; margin-bottom:20px; font-size:15px;">${data.message || "QR code is not valid."}</p>
+    `);
+  }
 }
-
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = String(text);
-  return div.innerHTML;
-}
-
 </script>
 
 </body>
