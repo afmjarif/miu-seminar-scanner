@@ -2,106 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>MIU CSE Club - QR Scanner</title>
 
   <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+      user-select: none; 
+    }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100dvh; /* Modern full viewport height for Android */
+      overflow: hidden; /* Prevents scrolling */
       font-family: 'Inter', Arial, sans-serif;
-      background: #F5F7FA;
+      background: #0A2540; /* Dark background to blend with camera */
       color: #111;
-      padding-bottom: 20px;
     }
 
-    .container {
-      max-width: 500px;
-      margin: auto;
-      padding: 15px;
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      width: 100vw;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 15px;
+    /* ✅ Top Header & Buttons */
+    .top-section {
+      flex-shrink: 0;
+      background: #F8FAFC;
+      padding: 10px 10px 8px;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 10;
     }
 
-    .header h1 { margin: 5px 0; font-size: 22px; color: #0A2540; font-weight: 900;}
-    .header p  { margin: 0; font-size: 13px; color: #666; font-weight: 600;}
-
-    .club {
-      font-weight: 900;
-      font-size: 12px;
-      color: #00C2FF;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    /* ✅ Mobile-Optimized Mode Buttons */
     .mode-buttons {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 6px;
+      margin-bottom: 6px;
     }
     .mode-buttons.row2 {
       grid-template-columns: repeat(2, 1fr);
     }
 
     .mode-buttons button {
-      padding: 16px 5px;
+      padding: 10px 2px;
       border: 2px solid #E2E8F0;
       background: white;
       color: #64748B;
-      border-radius: 12px;
-      font-size: 14px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: 0.1s;
     }
 
     .mode-buttons button.active {
       background: #0A2540;
       border-color: #0A2540;
       color: white;
-      box-shadow: 0 4px 12px rgba(10,37,64,0.3);
     }
     
-    /* Info button special color */
     .mode-buttons button.active.info-btn {
       background: #00C2FF;
       border-color: #00C2FF;
       color: #0A2540;
     }
 
-    #reader {
-      width: 100%;
-      background: #000;
-      border-radius: 16px;
+    /* ✅ Middle Camera Section */
+    .camera-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
-      border: 3px solid #0A2540;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      background: #000;
+      position: relative;
     }
 
-    /* ✅ Larger, High-Contrast Status Box */
+    #reader {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Hide the default HTML5-Qrcode UI text/icons if possible */
+    #reader__dashboard_section_csr {
+      display: none !important;
+    }
+
+    /* ✅ Bottom Status & Controls */
+    .bottom-section {
+      flex-shrink: 0;
+      background: #F8FAFC;
+      padding: 12px 15px calc(12px + env(safe-area-inset-bottom));
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
     .status {
-      margin-top: 15px;
-      padding: 20px 15px;
-      border-radius: 16px;
+      padding: 12px;
+      border-radius: 12px;
       background: white;
       text-align: center;
       border: 2px solid #E2E8F0;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+      margin-bottom: 10px;
+      min-height: 90px; /* Prevents layout jumping */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .status h2 { margin: 0 0 10px; font-size: 24px; font-weight: 900; letter-spacing: 1px;}
-    .status p  { margin: 8px 0; font-size: 16px; line-height: 1.5; font-weight: 600; color: #333;}
-    .status strong { font-size: 22px; color: #0A2540; display: block; margin-top: 5px;}
+    .status h2 { margin: 0 0 4px; font-size: 18px; font-weight: 900; letter-spacing: 0.5px;}
+    .status p  { margin: 2px 0; font-size: 13px; line-height: 1.4; font-weight: 600; color: #333;}
+    .status strong { font-size: 16px; color: #0A2540; display: block; margin-top: 2px;}
 
     .success { background: #ECFDF5; border-color: #10B981; }
     .success h2 { color: #065F46; }
@@ -118,69 +142,60 @@
 
     .start-button {
       width: 100%;
-      padding: 20px;
-      margin-top: 15px;
+      padding: 16px;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       background: #0A2540;
       color: white;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(10,37,64,0.2);
+      box-shadow: 0 4px 10px rgba(10,37,64,0.2);
       transition: 0.2s;
     }
 
-    .start-button:disabled { opacity: 0.5; box-shadow: none; }
-
-    .footer {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 12px;
-      color: #94A3B8;
-      font-weight: 600;
+    .start-button:disabled { 
+      opacity: 0.5; 
+      box-shadow: none; 
+      background: #64748B;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app-container">
 
-  <div class="header">
-    <div class="club">MIU CSE CLUB</div>
-    <h1>AI Summit 2026 Scanner</h1>
-    <p>QR Verification System</p>
+  <!-- TOP: Buttons -->
+  <div class="top-section">
+    <div class="mode-buttons">
+      <button id="entryButton" class="active" onclick="setMode('ENTRY')">ENTRY</button>
+      <button id="foodButton" onclick="setMode('FOOD')">FOOD</button>
+      <button id="snacksButton" onclick="setMode('SNACKS')">SNACKS</button>
+    </div>
+    <div class="mode-buttons row2">
+      <button id="giftButton" onclick="setMode('GIFT')">GIFT</button>
+      <button id="infoButton" class="info-btn" onclick="setMode('INFO')">INFO</button>
+    </div>
   </div>
 
-  <!-- ✅ MODES (ENTRY, FOOD, SNACKS, GIFT, INFO) -->
-  <div class="mode-buttons">
-    <button id="entryButton" class="active" onclick="setMode('ENTRY')">ENTRY</button>
-    <button id="foodButton" onclick="setMode('FOOD')">FOOD</button>
-    <button id="snacksButton" onclick="setMode('SNACKS')">SNACKS</button>
-  </div>
-  <div class="mode-buttons row2">
-    <button id="giftButton" onclick="setMode('GIFT')">GIFT</button>
-    <button id="infoButton" class="info-btn" onclick="setMode('INFO')">INFO</button>
+  <!-- MIDDLE: Camera -->
+  <div class="camera-section">
+    <div id="reader"></div>
   </div>
 
-  <!-- SCANNER -->
-  <div id="reader"></div>
+  <!-- BOTTOM: Status & Start Button -->
+  <div class="bottom-section">
+    
+    <div id="status" class="status info">
+      <h2>READY</h2>
+      <p>Select a mode and tap Start Camera.</p>
+    </div>
 
-  <!-- START CAMERA -->
-  <button id="startButton" class="start-button" onclick="startScanner()">
-    📷 START CAMERA
-  </button>
+    <button id="startButton" class="start-button" onclick="startScanner()">
+      📷 START CAMERA
+    </button>
 
-  <!-- STATUS -->
-  <div id="status" class="status info">
-    <h2>READY</h2>
-    <p>Select a mode and scan the QR code.</p>
-  </div>
-
-  <div class="footer">
-    MIU CSE Club Presents AI Summit 2026<br>
-    Department of CSE | Manarat International University
   </div>
 
 </div>
@@ -195,6 +210,10 @@ let scannerRunning = false;
 let currentMode = "ENTRY";
 let processing = false;
 
+// ✅ Force Screen to stay awake (if supported by browser)
+if ('wakeLock' in navigator) {
+  navigator.wakeLock.request('screen').catch(err => console.log('Wake Lock failed'));
+}
 
 function setMode(mode) {
   currentMode = mode;
@@ -223,9 +242,17 @@ function startScanner() {
 
   showStatus("info", "STARTING CAMERA", "Please allow camera access.");
 
+  // Start camera full screen
   scanner.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
+    { 
+      fps: 15, 
+      qrbox: function(viewfinderWidth, viewfinderHeight) {
+        let minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+        let qrboxSize = Math.floor(minEdge * 0.7); // Box takes 70% of the screen
+        return { width: qrboxSize, height: qrboxSize };
+      }
+    },
     onScanSuccess,
     onScanFailure
   )
@@ -238,12 +265,17 @@ function startScanner() {
   .catch(function(error) {
     console.error(error);
     showStatus("error", "CAMERA ERROR", "Camera could not be started. Please allow permission.");
+    scannerRunning = false;
   });
 }
 
 function onScanSuccess(decodedText, decodedResult) {
   if (processing) return;
   processing = true;
+  
+  // Vibrate phone if supported (feels like a real scanner)
+  if (navigator.vibrate) navigator.vibrate(100);
+
   if (scannerRunning) {
     try { scanner.pause(true); } catch (e) { console.log(e); }
   }
@@ -269,7 +301,7 @@ function handleResponse(data) {
   /* SUCCESS */
   if (data.success && currentMode !== "INFO") {
     showStatus("success", data.message,
-      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
+      "<strong>" + escapeHtml(data.name || "") + "</strong>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
       "Time: "  + escapeHtml(data.time  || "")
     );
@@ -277,10 +309,10 @@ function handleResponse(data) {
   /* INFO */
   else if (data.success && currentMode === "INFO") {
     showStatus("info", "PARTICIPANT INFO",
-      "<strong>" + escapeHtml(data.name || "") + "</strong><br><br>" +
+      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "Student ID: " + escapeHtml(data.studentId || "N/A") + "<br>" +
-      "Department: " + escapeHtml(data.department || "N/A") + "<br>" +
+      "ID: " + escapeHtml(data.studentId || "N/A") + "<br>" +
+      "Dept: " + escapeHtml(data.department || "N/A") + "<br>" +
       "Batch: " + escapeHtml(data.batch || "N/A") + "<br>" +
       "Phone: " + escapeHtml(data.phone || "N/A")
     );
@@ -288,17 +320,17 @@ function handleResponse(data) {
   /* DUPLICATE */
   else if (data.duplicate) {
     showStatus("warning", data.message,
-      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
+      "<strong>" + escapeHtml(data.name || "") + "</strong>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "Previous Time: " + escapeHtml(data.time || "Not recorded")
+      "Prev Time: " + escapeHtml(data.time || "Not recorded")
     );
   }
   /* PAYMENT BLOCKED */
   else if (data.paymentBlocked) {
     showStatus("warning", "⚠️ PAYMENT NOT VERIFIED",
-      "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
+      "<strong>" + escapeHtml(data.name || "") + "</strong>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
-      "Status: " + escapeHtml(data.paymentStatus || "Pending") + "<br><br>" +
+      "Status: " + escapeHtml(data.paymentStatus || "Pending") + "<br>" +
       "<small>Visit registration desk.</small>"
     );
   }
@@ -319,7 +351,7 @@ function finishProcessing() {
     if (scanner && scannerRunning) {
       try { scanner.resume(); } catch (error) { console.log(error); }
     }
-  }, 2500);
+  }, 2000); // 2 second cooldown before scanning next person
 }
 
 function escapeHtml(text) {
