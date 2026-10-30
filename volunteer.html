@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Volunteer Guide - MIU CSE Club AI Summit 2026</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: #060C14;
+      color: #E2E8F0;
+      line-height: 1.6;
+    }
+
+    /* ✅ Header */
+    .header {
+      background: radial-gradient(circle at top, #0A2540 0%, #060C14 100%);
+      padding: 50px 20px 40px;
+      text-align: center;
+      border-bottom: 2px solid #00C2FF;
+    }
+    .header .club {
+      font-size: 14px;
+      font-weight: 900;
+      color: #00C2FF;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      color: #ffffff;
+      margin: 0 0 10px;
+      line-height: 1.2;
+    }
+    .header p {
+      font-size: 16px;
+      color: #94A3B8;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    /* ✅ Main Container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    /* ✅ Section Titles */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      margin: 40px 0 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 10px;
+    }
+    .section-title span.icon {
+      font-size: 28px;
+    }
+
+    /* ✅ Cards */
+    .card {
+      background: #0F172A;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .card p { margin: 0 0 10px; font-size: 16px; }
+    .card p:last-child { margin: 0; }
+    .card strong { color: #ffffff; }
+    .card a { color: #00C2FF; text-decoration: none; font-weight: 800; word-break: break-all;}
+
+    /* ✅ Setup List */
+    .setup-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .setup-list li {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    .setup-list li::before {
+      content: '👉';
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+
+    /* ✅ Mode Grid */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media(min-width: 600px) {
+      .mode-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .mode-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      background: rgba(10, 37, 64, 0.5);
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 4px solid #00C2FF;
+    }
+    .mode-item .m-icon { font-size: 24px; }
+    .mode-item .m-text { font-size: 15px; }
+    .mode-item .m-text strong { display: block; color: #ffffff; font-size: 16px; margin-bottom: 4px;}
+
+    /* ✅ Status Results */
+    .status-box {
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    .status-box strong { font-size: 16px; display: block; margin-bottom: 4px;}
+    
+    .bg-green { background: rgba(16, 185, 129, 0.15); border-left: 4px solid #10B981; color: #d1fae5;}
+    .bg-green strong { color: #10B981; }
+    
+    .bg-yellow { background: rgba(245, 158, 11, 0.15); border-left: 4px solid #F59E0B; color: #fef3c7;}
+    .bg-yellow strong { color: #F59E0B; }
+    
+    .bg-red { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #EF4444; color: #fee2e2;}
+    .bg-red strong { color: #EF4444; }
+    
+    .bg-blue { background: rgba(59, 130, 246, 0.15); border-left: 4px solid #3B82F6; color: #dbeafe;}
+    .bg-blue strong { color: #3B82F6; }
+
+    /* ✅ Rules List */
+    .rules-list {
+      list-style: none;
+      padding: 0;
+    }
+    .rules-list li {
+      background: #0F172A;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .rules-list li span { color: #EF4444; font-weight: 900; }
+
+    /* ✅ Footer Contact */
+    .contact-box {
+      background: linear-gradient(135deg, #00C2FF 0%, #007BFF 100%);
+      color: #000;
+      padding: 25px;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .contact-box h3 { margin: 0 0 10px; font-size: 20px; font-weight: 900; }
+    .contact-box p { margin: 0; font-size: 18px; font-weight: 800; }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: #64748B;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Header -->
+  <div class="header">
+    <div class="club">MIU CSE Club</div>
+    <h1>AI Summit 2026</h1>
+    <p>📱 Volunteer Scanner & Event Guide</p>
+  </div>
+
+  <div class="container">
+
+    <p style="text-align: center; font-size: 18px; color: #94A3B8;">
+      Welcome to the Tech Team! Your role is the most critical part of the event. You are the gatekeepers. Please read this guide carefully.
+    </p>
+
+    <!-- 1. Setup -->
+    <div class="section-title"><span class="icon">🟢</span> 1. How to Start</div>
+    <div class="card">
+      <p><strong>Before the event, ensure you have:</strong></p>
+      <ul class="setup-list">
+        <li>A fully charged smartphone.</li>
+        <li>Active Internet connection (mobile data).</li>
+        <li>Google Chrome browser (recommended).</li>
+      </ul>
+      <p style="margin-top: 15px;"><strong>Steps to start:</strong></p>
+      <ul class="setup-list">
+        <li>Open this link: <a href="https://afmjarif.github.io/miu-seminar-scanner/" target="_blank">afmjarif.github.io/miu-seminar-scanner/</a></li>
+        <li><strong>Pro Tip:</strong> Tap the 3 dots in Chrome and select "Add to Home Screen". It will act like a real app.</li>
+        <li>Select your assigned mode (e.g., ENTRY, FOOD).</li>
+        <li>Tap the big <strong>SCAN</strong> button and <strong>Allow Camera Access</strong>.</li>
+      </ul>
+    </div>
+
+    <!-- 2. Modes -->
+    <div class="section-title"><span class="icon">🕹️</span> 2. The 5 Modes</div>
+    <p style="margin-bottom: 15px; color: #94A3B8;">Always tap the correct button at the top of the screen before scanning.</p>
+    
+    <div class="mode-grid">
+      <div class="mode-item">
+        <div class="m-icon">🛡️</div>
+        <div class="m-text"><strong>ENTRY</strong> Main gate. Marks them as "Entered" and records entry time.</div>
+      </div>
+      <div class="mode-item">
+        <div class="m-icon">🍽️</div>
+        <div class="m-text"><strong>FOOD</strong> Lunch counter. Marks that they received lunch.</div>
+      </div>
+      <div class="mode-item">
+        <div class="m-icon">☕</div>
+        <div class="m-text"><strong>SNACKS</strong> Evening snack counter.</div>
+      </div>
+      <div class="mode-item">
+        <div class="m-icon">🎁</div>
+        <div class="m-text"><strong>GIFT</strong> ID Card / Gift distribution desk.</div>
+      </div>
+      <div class="mode-item" style="border-left-color: #3B82F6;">
+        <div class="m-icon">ℹ️</div>
+        <div class="m-text"><strong>INFO</strong> Shows participant details without marking them for anything.</div>
+      </div>
+    </div>
+
+    <!-- 3. Scanning -->
+    <div class="section-title"><span class="icon">📷</span> 3. How to Scan</div>
+    <div class="card">
+      <ul class="setup-list">
+        <li>Point the camera at the participant's QR code (on their phone or printed Event Pass).</li>
+        <li>Hold the phone steady.</li>
+        <li>When it scans, the phone will <strong>vibrate</strong>, and a <strong>pop-up card</strong> will slide up from the bottom.</li>
+        <li>Read the result on the pop-up card.</li>
+      </ul>
+    </div>
+
+    <!-- 4. Results -->
+    <div class="section-title"><span class="icon">🚦</span> 4. Understanding Results</div>
+    
+    <div class="status-box bg-green">
+      <strong>🟢 VERIFIED</strong>
+      The scan was successful. Let them pass / give them the food/gift.
+    </div>
+    
+    <div class="status-box bg-yellow">
+      <strong>🟡 ALREADY DONE</strong>
+      They have already scanned for this mode. <strong>Do not</strong> let them pass or give another item.
+      <br><em>Example: If you scan for FOOD and it says "ALREADY DONE", they already ate.</em>
+    </div>
+    
+    <div class="status-box bg-yellow">
+      <strong>🟡 PAYMENT PENDING</strong>
+      They have not paid or their payment is not verified. <strong>Do not let them in.</strong> Send them to the Registration Desk.
+    </div>
+    
+    <div class="status-box bg-red">
+      <strong>🔴 INVALID QR</strong>
+      The QR code is fake, damaged, or from a different event. <strong>Do not let them in.</strong>
+    </div>
+
+    <div class="status-box bg-blue">
+      <strong>ℹ️ INFO</strong>
+      Shows their details. It does not mark them as attended.
+    </div>
+
+    <p style="margin-top: 10px; font-size: 15px; color: #94A3B8;">After every scan, simply tap the <strong>"SCAN NEXT"</strong> button on the pop-up to close it and scan the next person.</p>
+
+    <!-- 5. Troubleshooting -->
+    <div class="section-title"><span class="icon">🛠️</span> 5. Troubleshooting</div>
+    <div class="card">
+      <ul class="setup-list">
+        <li><strong>Camera is black:</strong> Refresh the page and tap "Allow" on the camera permission.</li>
+        <li><strong>Connection Error:</strong> Move to an area with better Wi-Fi/Data. The system requires internet to verify.</li>
+        <li><strong>Name is misspelled:</strong> Tell the participant to visit the Registration Desk. Do not fix it yourself.</li>
+        <li><strong>Participant lost their QR code:</strong> Tell them to check their email (Event Pass) or visit the Registration Desk with their Student ID.</li>
+      </ul>
+    </div>
+
+    <!-- 6. Rules -->
+    <div class="section-title"><span class="icon">⚠️</span> 6. Golden Rules</div>
+    <ul class="rules-list">
+      <li><span>1.</span> <strong>Charge your phone to 100%</strong> before the event. Bring a power bank if possible.</li>
+      <li><span>2.</span> <strong>Always check the Mode</strong> before scanning. If you scan for FOOD when you are at the GATE, the system will mark them as having eaten lunch!</li>
+      <li><span>3.</span> <strong>Do not share the scanner link</strong> with participants. This is for volunteers only.</li>
+      <li><span>4.</span> <strong>Be patient.</strong> If there is a long line, keep your voice calm and politely ask them to have their QR code ready.</li>
+    </ul>
+
+    <!-- 7. Flow -->
+    <div class="section-title"><span class="icon">🗺️</span> 7. Event Flow (Who stands where)</div>
+    <div class="card">
+      <ul class="setup-list">
+        <li><strong>Main Gate (ENTRY):</strong> 2 Volunteers (one to scan, one to assist the line).</li>
+        <li><strong>Lunch Counter (FOOD):</strong> 6 Volunteers.</li>
+        <li><strong>Snacks/Tea Counter (SNACKS):</strong> 3 or 4 Volunteers.</li>
+        <li><strong>Gift / ID Card Desk (GIFT):</strong> 2 Volunteers.</li>
+        <li><strong>Registration Desk:</strong> Seniors and Club leaders (handling payment issues, lost passes, etc.).</li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-box">
+      <h3>Need Help?</h3>
+            <p style="margin-top: 10px;">📞 Call: <a href="tel:+8801575827658" style="color: #0A2540; text-decoration: underline;">afm larif</a></p>
+    </div>
+
+    <div class="footer">
+      © 2026 MIU CSE Club. All rights reserved.
+    </div>
+
+  </div>
+
+</body>
+</html>
