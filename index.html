@@ -2,72 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MIU CSE Club - QR Scanner</title>
 
   <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       margin: 0;
       font-family: 'Inter', Arial, sans-serif;
-      background: #f4f4f4;
+      background: #F5F7FA;
       color: #111;
+      padding-bottom: 20px;
     }
 
     .container {
-      max-width: 520px;
+      max-width: 500px;
       margin: auto;
-      padding: 20px;
+      padding: 15px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
-    .header h1 { margin: 0; font-size: 20px; color: #0A2540; font-weight: 900;}
-    .header p  { margin: 4px 0; font-size: 13px; color: #666;}
+    .header h1 { margin: 5px 0; font-size: 22px; color: #0A2540; font-weight: 900;}
+    .header p  { margin: 0; font-size: 13px; color: #666; font-weight: 600;}
 
     .club {
       font-weight: 900;
-      font-size: 14px;
+      font-size: 12px;
       color: #00C2FF;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
-    /* ✅ Mode Buttons Grid */
+    /* ✅ Mobile-Optimized Mode Buttons */
     .mode-buttons {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     .mode-buttons.row2 {
       grid-template-columns: repeat(2, 1fr);
     }
 
     .mode-buttons button {
-      padding: 12px 5px;
-      border: 2px solid #0A2540;
+      padding: 16px 5px;
+      border: 2px solid #E2E8F0;
       background: white;
-      color: #0A2540;
-      border-radius: 8px;
-      font-size: 13px;
+      color: #64748B;
+      border-radius: 12px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       transition: 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .mode-buttons button.active {
       background: #0A2540;
+      border-color: #0A2540;
       color: white;
+      box-shadow: 0 4px 12px rgba(10,37,64,0.3);
     }
     
-    /* Special color for Info mode */
+    /* Info button special color */
     .mode-buttons button.active.info-btn {
       background: #00C2FF;
       border-color: #00C2FF;
@@ -77,49 +82,63 @@
     #reader {
       width: 100%;
       background: #000;
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
+      border: 3px solid #0A2540;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
+    /* ✅ Larger, High-Contrast Status Box */
     .status {
       margin-top: 15px;
       padding: 20px 15px;
-      border-radius: 12px;
+      border-radius: 16px;
       background: white;
       text-align: center;
-      border: 1px solid #ddd;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border: 2px solid #E2E8F0;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
     }
 
-    .status h2 { margin: 0 0 10px; font-size: 22px; font-weight: 900; }
-    .status p  { margin: 5px 0; font-size: 15px; line-height: 1.5; }
-    .status strong { font-size: 18px; color: #0A2540; }
+    .status h2 { margin: 0 0 10px; font-size: 24px; font-weight: 900; letter-spacing: 1px;}
+    .status p  { margin: 8px 0; font-size: 16px; line-height: 1.5; font-weight: 600; color: #333;}
+    .status strong { font-size: 22px; color: #0A2540; display: block; margin-top: 5px;}
 
-    .success { background: #dff5e3; border-color: #28a745; }
-    .error   { background: #ffe1e1; border-color: #dc3545; }
-    .warning { background: #fff3cd; border-color: #ffc107; }
-    .info    { background: #e8f0fe; border-color: #4285f4; }
+    .success { background: #ECFDF5; border-color: #10B981; }
+    .success h2 { color: #065F46; }
+    .success strong { color: #10B981; }
+
+    .error   { background: #FEF2F2; border-color: #EF4444; }
+    .error h2 { color: #991B1B; }
+
+    .warning { background: #FFFBEB; border-color: #F59E0B; }
+    .warning h2 { color: #92400E; }
+
+    .info    { background: #EFF6FF; border-color: #3B82F6; }
+    .info h2 { color: #1E40AF; }
 
     .start-button {
       width: 100%;
-      padding: 16px;
+      padding: 20px;
       margin-top: 15px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       background: #0A2540;
       color: white;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 900;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(10,37,64,0.2);
+      transition: 0.2s;
     }
 
-    .start-button:disabled { opacity: 0.5; }
+    .start-button:disabled { opacity: 0.5; box-shadow: none; }
 
     .footer {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 25px;
       font-size: 12px;
-      color: #555;
+      color: #94A3B8;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -134,9 +153,9 @@
     <p>QR Verification System</p>
   </div>
 
-  <!-- ✅ MODES (3 on top, 2 on bottom) -->
+  <!-- ✅ MODES (ENTRY, FOOD, SNACKS, GIFT, INFO) -->
   <div class="mode-buttons">
-    <button id="eventButton" class="active" onclick="setMode('EVENT')">EVENT</button>
+    <button id="entryButton" class="active" onclick="setMode('ENTRY')">ENTRY</button>
     <button id="foodButton" onclick="setMode('FOOD')">FOOD</button>
     <button id="snacksButton" onclick="setMode('SNACKS')">SNACKS</button>
   </div>
@@ -150,7 +169,7 @@
 
   <!-- START CAMERA -->
   <button id="startButton" class="start-button" onclick="startScanner()">
-    START CAMERA
+    📷 START CAMERA
   </button>
 
   <!-- STATUS -->
@@ -160,8 +179,8 @@
   </div>
 
   <div class="footer">
-    MIU CSE Club AI Summit 2026<br>
-    Manarat International University
+    MIU CSE Club Presents AI Summit 2026<br>
+    Department of CSE | Manarat International University
   </div>
 
 </div>
@@ -169,62 +188,37 @@
 
 <script>
 
-// ==========================================================
-// APPS SCRIPT BACKEND
-// ==========================================================
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbzY2-Vrn2tmgsLO8H1g6tOy7tTusEWT6ZyFcsWkf3C3Q2oVz1-RC-h_df0lTst9ph-aWA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzY2-Vrn2tmgsLO8H1g6tOy7tTusEWT6ZyFcsWkf3C3Q2oVz1-RC-h_df0lTst9ph-aWA/exec";
 
-
-// ==========================================================
-// VARIABLES
-// ==========================================================
 let scanner = null;
 let scannerRunning = false;
-let currentMode = "EVENT";
+let currentMode = "ENTRY";
 let processing = false;
 
 
-// ==========================================================
-// SET MODE
-// ==========================================================
 function setMode(mode) {
   currentMode = mode;
-
-  var modes = ["EVENT", "FOOD", "SNACKS", "GIFT", "INFO"];
+  var modes = ["ENTRY", "FOOD", "SNACKS", "GIFT", "INFO"];
   
-  // Remove active class from all
   modes.forEach(function(m) {
     var btn = document.getElementById(m.toLowerCase() + "Button");
     if (btn) btn.classList.remove("active");
   });
 
-  // Add active class to selected
   var active = document.getElementById(mode.toLowerCase() + "Button");
   if (active) active.classList.add("active");
 
   showStatus("info", mode + " MODE", "Ready to scan.");
 }
 
-
-// ==========================================================
-// STATUS
-// ==========================================================
 function showStatus(type, title, message) {
   var status = document.getElementById("status");
   status.className = "status " + type;
-  status.innerHTML =
-    "<h2>" + escapeHtml(title) + "</h2>" +
-    "<p>" + message + "</p>";
+  status.innerHTML = "<h2>" + escapeHtml(title) + "</h2><p>" + message + "</p>";
 }
 
-
-// ==========================================================
-// START SCANNER
-// ==========================================================
 function startScanner() {
   if (scannerRunning) return;
-
   if (!scanner) scanner = new Html5Qrcode("reader");
 
   showStatus("info", "STARTING CAMERA", "Please allow camera access.");
@@ -238,89 +232,51 @@ function startScanner() {
   .then(function() {
     scannerRunning = true;
     document.getElementById("startButton").disabled = true;
-    document.getElementById("startButton").innerText = "CAMERA ACTIVE";
+    document.getElementById("startButton").innerText = "🟢 CAMERA ACTIVE";
     showStatus("info", currentMode + " MODE", "Point the camera at a QR code.");
   })
   .catch(function(error) {
     console.error(error);
-    showStatus("error", "CAMERA ERROR",
-      "Camera could not be started. Please allow camera permission and try again.");
+    showStatus("error", "CAMERA ERROR", "Camera could not be started. Please allow permission.");
   });
 }
 
-
-// ==========================================================
-// QR SCAN SUCCESS
-// ==========================================================
 function onScanSuccess(decodedText, decodedResult) {
   if (processing) return;
   processing = true;
-
-  console.log("QR:", decodedText);
-
   if (scannerRunning) {
     try { scanner.pause(true); } catch (e) { console.log(e); }
   }
-
-  showStatus("info", "VERIFYING...", "Checking registration...");
+  showStatus("info", "VERIFYING...", "Checking database...");
   verifyToken(decodedText);
 }
 
+function onScanFailure(error) { }
 
-// ==========================================================
-// QR SCAN FAILURE
-// ==========================================================
-function onScanFailure(error) {
-  // Ignore continuous scan errors.
-}
-
-
-// ==========================================================
-// VERIFY TOKEN
-// ==========================================================
 function verifyToken(token) {
-  const url =
-    API_URL +
-    "?token=" + encodeURIComponent(token) +
-    "&action=" + encodeURIComponent(currentMode) +
-    "&callback=handleResponse";
-
+  const url = API_URL + "?token=" + encodeURIComponent(token) + "&action=" + encodeURIComponent(currentMode) + "&callback=handleResponse";
   const script = document.createElement("script");
   script.src = url;
   script.id  = "jsonpRequest";
-
   script.onerror = function() {
-    showStatus("error", "CONNECTION ERROR",
-      "Could not connect to the verification server.");
+    showStatus("error", "CONNECTION ERROR", "Could not connect to the server.");
     finishProcessing();
   };
-
   document.body.appendChild(script);
 }
 
-
-// ==========================================================
-// JSONP RESPONSE
-// ==========================================================
 function handleResponse(data) {
-  console.log("Server response:", data);
-
-  /* ---------- SUCCESS (EVENT/FOOD/SNACKS/GIFT) ---------- */
+  /* SUCCESS */
   if (data.success && currentMode !== "INFO") {
-    showStatus(
-      "success",
-      data.message,
+    showStatus("success", data.message,
       "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
       "Time: "  + escapeHtml(data.time  || "")
     );
   }
-
-  /* ---------- SUCCESS (INFO) ---------- */
+  /* INFO */
   else if (data.success && currentMode === "INFO") {
-    showStatus(
-      "info",
-      "PARTICIPANT INFO",
+    showStatus("info", "PARTICIPANT INFO",
       "<strong>" + escapeHtml(data.name || "") + "</strong><br><br>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
       "Student ID: " + escapeHtml(data.studentId || "N/A") + "<br>" +
@@ -329,49 +285,33 @@ function handleResponse(data) {
       "Phone: " + escapeHtml(data.phone || "N/A")
     );
   }
-
-  /* ---------- DUPLICATE ---------- */
+  /* DUPLICATE */
   else if (data.duplicate) {
-    showStatus(
-      "warning",
-      data.message,
+    showStatus("warning", data.message,
       "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
       "Previous Time: " + escapeHtml(data.time || "Not recorded")
     );
   }
-
-  /* ---------- PAYMENT BLOCKED ---------- */
+  /* PAYMENT BLOCKED */
   else if (data.paymentBlocked) {
-    showStatus(
-      "warning",
-      "⚠️ PAYMENT NOT VERIFIED",
+    showStatus("warning", "⚠️ PAYMENT NOT VERIFIED",
       "<strong>" + escapeHtml(data.name || "") + "</strong><br>" +
       "RegID: " + escapeHtml(data.regId || "") + "<br>" +
       "Status: " + escapeHtml(data.paymentStatus || "Pending") + "<br><br>" +
-      "<small>Please visit the registration desk to complete payment verification.</small>"
+      "<small>Visit registration desk.</small>"
     );
   }
-
-  /* ---------- INVALID ---------- */
+  /* INVALID */
   else {
-    showStatus(
-      "error",
-      "INVALID QR",
-      escapeHtml(data.message || "QR code is not valid.")
-    );
+    showStatus("error", "INVALID QR", escapeHtml(data.message || "QR code is not valid."));
   }
 
   finishProcessing();
 }
 
-
-// ==========================================================
-// FINISH PROCESSING
-// ==========================================================
 function finishProcessing() {
   processing = false;
-
   const script = document.getElementById("jsonpRequest");
   if (script) script.remove();
 
@@ -382,10 +322,6 @@ function finishProcessing() {
   }, 2500);
 }
 
-
-// ==========================================================
-// ESCAPE HTML
-// ==========================================================
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = String(text);
