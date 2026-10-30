@@ -21,10 +21,11 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100dvh;
+      height: 100dvh; /* Forces exact screen height */
+      width: 100vw;
       overflow: hidden;
       font-family: 'Inter', sans-serif;
-      background: #060C14; /* Deep premium dark */
+      background: #060C14; 
       color: #ffffff;
     }
 
@@ -34,33 +35,33 @@
       height: 100dvh;
       width: 100vw;
       background: radial-gradient(circle at top, #0A2540 0%, #060C14 100%);
-      padding: 10px 15px;
-      padding-top: calc(10px + env(safe-area-inset-top));
-      padding-bottom: calc(10px + env(safe-area-inset-bottom));
     }
 
-    /* ✅ Top Control Bar (5 Boxes) */
+    /* ✅ Top Control Bar */
+    .top-controls {
+      flex-shrink: 0;
+      padding: calc(10px + env(safe-area-inset-top)) 10px 10px;
+    }
+
     .mode-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 8px;
-      z-index: 10;
     }
     .mode-grid.row2 {
       grid-template-columns: repeat(2, 1fr);
-      margin-bottom: 15px;
     }
 
     .mode-btn {
-      padding: 12px 4px;
+      padding: 14px 5px;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(10, 37, 64, 0.6);
       color: #94A3B8;
-      font-size: 12px;
+      font-size: 14px; /* Increased size */
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       cursor: pointer;
       transition: 0.2s;
       display: flex;
@@ -75,44 +76,41 @@
       color: #00C2FF;
       box-shadow: 0 0 15px rgba(0, 194, 255, 0.2);
     }
+    .mode-btn .icon { font-size: 18px; }
 
-    .mode-btn .icon { font-size: 16px; }
-
-    /* ✅ Camera Section (Large Square) */
+    /* ✅ Camera Section (Takes all remaining space) */
     .camera-section {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 10px;
       position: relative;
-      margin-bottom: 15px;
     }
 
     .scanner-frame {
       width: 100%;
-      max-width: 500px;
-      aspect-ratio: 1 / 1; /* Forces perfect square */
-      border-radius: 20px;
+      height: 100%;
+      border-radius: 16px;
       position: relative;
-      padding: 3px;
-      background: linear-gradient(135deg, #00C2FF, #0A2540);
-      box-shadow: 0 0 30px rgba(0, 194, 255, 0.15);
+      background: #000;
+      border: 2px solid rgba(0, 194, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 194, 255, 0.1);
+      overflow: hidden;
     }
 
     #reader {
       width: 100%;
       height: 100%;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #000;
     }
 
     /* Hide default HTML5-QRCode UI */
     #reader__dashboard_section_csr { display: none !important; }
 
-    /* ✅ Bottom Section (Scan Button & Status) */
+    /* ✅ Bottom Section */
     .bottom-section {
       flex-shrink: 0;
+      padding: 10px 15px calc(15px + env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -121,80 +119,49 @@
     .status-pill {
       padding: 8px 16px;
       border-radius: 50px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #94A3B8;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      transition: 0.3s;
+      color: #E2E8F0;
+      font-size: 14px; /* Increased */
+      font-weight: 700;
+      margin-bottom: 15px;
     }
 
     .btn-scan {
       width: 100%;
-      max-width: 400px;
-      padding: 16px;
+      padding: 18px;
       border-radius: 12px;
       border: none;
       background: linear-gradient(135deg, #00C2FF 0%, #007BFF 100%);
       color: #000;
-      font-size: 18px;
+      font-size: 20px; /* Increased */
       font-weight: 900;
       letter-spacing: 2px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 194, 255, 0.4);
       transition: 0.2s;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
-    .btn-scan:active { transform: scale(0.95); }
-    .btn-scan:disabled {
-      background: #1E293B;
-      color: #64748B;
-      box-shadow: none;
-    }
+    .btn-scan:active { transform: scale(0.96); }
+    .btn-scan:disabled { background: #1E293B; color: #64748B; box-shadow: none; }
 
-    /* ✅ Premium Branding */
+    /* ✅ Branding (Bigger) */
     .branding {
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 12px;
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      text-align: center;
     }
-    .branding-left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      text-align: left;
-    }
-    .branding .presented {
-      font-size: 8px;
-      color: #64748B;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 800;
-    }
-    .branding .title {
-      font-size: 14px;
-      color: #ffffff;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    .branding .club {
-      font-size: 10px;
-      color: #00C2FF;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
+    .branding .presented { font-size: 10px; color: #94A3B8; letter-spacing: 2px; font-weight: 800; text-transform: uppercase;}
+    .branding .title { font-size: 18px; color: #ffffff; font-weight: 900; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px;}
+    .branding .club { font-size: 12px; color: #00C2FF; font-weight: 800; letter-spacing: 2px;}
 
-    /* ✅ Popup Bottom Sheet */
+    /* ✅ Oversized Popup Modal (Bottom to Middle) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(6, 12, 20, 0.8);
+      background: rgba(6, 12, 20, 0.85);
       backdrop-filter: blur(8px);
       display: flex;
       justify-content: center;
@@ -211,69 +178,70 @@
     }
 
     .modal-card {
-      background: #0F172A; /* Dark slate */
+      background: #0F172A;
       width: 100%;
-      max-width: 500px;
-      border-top-left-radius: 30px;
-      border-top-right-radius: 30px;
-      padding: 30px 25px calc(30px + env(safe-area-inset-bottom));
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 25px 20px calc(25px + env(safe-area-inset-bottom));
       text-align: center;
       transform: translateY(100%);
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      max-height: 90vh;
+      height: 75vh; /* Covers bottom to middle screen */
+      max-height: 75vh;
       overflow-y: auto;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 -20px 40px rgba(0,0,0,0.5);
+      border-top: 2px solid #00C2FF;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
     }
 
     .modal-overlay.active .modal-card {
       transform: translateY(0);
     }
 
-    /* Drag handle indicator */
     .drag-handle {
-      width: 40px;
-      height: 4px;
+      width: 50px;
+      height: 5px;
       background: #334155;
       border-radius: 10px;
       margin: 0 auto 20px auto;
     }
 
-    /* Modal Badges */
+    /* Modal Badges (Bigger) */
     .badge { 
-      padding: 8px 24px; 
+      padding: 10px 30px; 
       border-radius: 50px; 
       font-weight: 900; 
-      font-size: 14px; 
+      font-size: 16px; 
       display: inline-block; 
       margin-bottom: 20px; 
       letter-spacing: 2px; 
     }
-    .badge-success { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-error { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-info { background: rgba(59, 130, 246, 0.15); color: #3B82F6; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid #10B981; }
+    .badge-error { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid #EF4444; }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid #F59E0B; }
+    .badge-info { background: rgba(59, 130, 246, 0.15); color: #3B82F6; border: 1px solid #3B82F6; }
 
-    .modal-card h1 { color: #ffffff; font-size: 24px; font-weight: 900; margin-bottom: 25px; line-height: 1.3; }
+    .modal-card h1 { color: #ffffff; font-size: 26px; font-weight: 900; margin-bottom: 25px; line-height: 1.3; }
 
-    /* Info Table */
-    .info-table { width: 100%; text-align: left; border-collapse: collapse; margin-bottom: 25px;}
-    .info-table td { padding: 14px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
-    .info-table td:first-child { color: #64748B; font-weight: 600; width: 40%; }
-    .info-table td:last-child { color: #ffffff; font-weight: 800; text-align: right; }
+    /* Info Table (Bigger text) */
+    .info-table { width: 100%; text-align: left; border-collapse: collapse; margin-bottom: auto;}
+    .info-table td { padding: 16px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); font-size: 16px; }
+    .info-table td:first-child { color: #94A3B8; font-weight: 600; width: 45%; }
+    .info-table td:last-child { color: #ffffff; font-weight: 800; text-align: right; font-size: 17px;}
 
     .btn-close {
       width: 100%;
       padding: 18px;
+      margin-top: 20px;
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #00C2FF 0%, #007BFF 100%);
       color: #000;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 900;
       letter-spacing: 1px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);
     }
   </style>
 </head>
@@ -282,60 +250,44 @@
 
 <div class="app-container">
 
-  <!-- ✅ Mode Grid (5 Boxes) -->
-  <div class="mode-grid">
-    <button id="btn-ENTRY" class="mode-btn active" onclick="setMode('ENTRY')">
-      <span class="icon">🛡️</span> ENTRY
-    </button>
-    <button id="btn-FOOD" class="mode-btn" onclick="setMode('FOOD')">
-      <span class="icon">🍽️</span> FOOD
-    </button>
-    <button id="btn-SNACKS" class="mode-btn" onclick="setMode('SNACKS')">
-      <span class="icon">☕</span> SNACKS
-    </button>
-  </div>
-  <div class="mode-grid row2">
-    <button id="btn-GIFT" class="mode-btn" onclick="setMode('GIFT')">
-      <span class="icon">🎁</span> GIFT
-    </button>
-    <button id="btn-INFO" class="mode-btn" onclick="setMode('INFO')">
-      <span class="icon">ℹ️</span> INFO
-    </button>
+  <!-- ✅ Mode Grid -->
+  <div class="top-controls">
+    <div class="mode-grid">
+      <button id="btn-ENTRY" class="mode-btn active" onclick="setMode('ENTRY')"><span class="icon">🛡️</span> ENTRY</button>
+      <button id="btn-FOOD" class="mode-btn" onclick="setMode('FOOD')"><span class="icon">🍽️</span> FOOD</button>
+      <button id="btn-SNACKS" class="mode-btn" onclick="setMode('SNACKS')"><span class="icon">☕</span> SNACKS</button>
+    </div>
+    <div class="mode-grid row2">
+      <button id="btn-GIFT" class="mode-btn" onclick="setMode('GIFT')"><span class="icon">🎁</span> GIFT</button>
+      <button id="btn-INFO" class="mode-btn" onclick="setMode('INFO')"><span class="icon">ℹ️</span> INFO</button>
+    </div>
   </div>
 
-  <!-- ✅ Large Square Camera -->
+  <!-- ✅ Large Camera Area -->
   <div class="camera-section">
     <div class="scanner-frame">
       <div id="reader"></div>
     </div>
   </div>
 
-  <!-- ✅ Bottom: Status, Scan Button, Branding -->
+  <!-- ✅ Bottom Section -->
   <div class="bottom-section">
-    <div class="status-pill" id="statusText">
-      Select a mode and tap SCAN
-    </div>
+    <div class="status-pill" id="statusText">Select a mode and tap SCAN</div>
 
-    <button id="startButton" class="btn-scan" onclick="startScanner()">
-      SCAN
-    </button>
+    <button id="startButton" class="btn-scan" onclick="startScanner()">SCAN</button>
 
-    <!-- ✅ Branding -->
     <div class="branding">
-      <div class="branding-left">
-        <div class="presented">MIU CSE Club Presents</div>
-        <div class="title">AI Summit 2026</div>
-        <div class="club">MIU CSE</div>
-      </div>
+      <div class="presented">MIU CSE Club Presents</div>
+      <div class="title">AI Summit 2026</div>
+      <div class="club">MIU CSE</div>
     </div>
   </div>
 
 </div>
 
-<!-- ✅ Popup Modal -->
+<!-- ✅ Big Popup Modal -->
 <div class="modal-overlay" id="resultModal">
   <div class="modal-card" id="modalContent">
-    <div class="drag-handle"></div>
     <!-- Content injected via JS -->
   </div>
 </div>
@@ -351,18 +303,11 @@ let processing = false;
 
 function setMode(mode) {
   currentMode = mode;
-  
-  // Remove active class from all
   var modes = ["ENTRY", "FOOD", "SNACKS", "GIFT", "INFO"];
   modes.forEach(function(m) {
-    var btn = document.getElementById("btn-" + m);
-    if (btn) btn.classList.remove("active");
+    document.getElementById("btn-" + m).classList.remove("active");
   });
-
-  // Add active class to selected
-  var activeBtn = document.getElementById("btn-" + mode);
-  if (activeBtn) activeBtn.classList.add("active");
-
+  document.getElementById("btn-" + mode).classList.add("active");
   updateStatus("Mode: " + mode);
 }
 
@@ -375,7 +320,7 @@ function startScanner() {
   if (!scanner) scanner = new Html5Qrcode("reader");
 
   document.getElementById("startButton").disabled = true;
-  document.getElementById("startButton").innerText = "...";
+  document.getElementById("startButton").innerText = "LOADING...";
   updateStatus("Starting camera...");
 
   scanner.start(
@@ -383,9 +328,9 @@ function startScanner() {
     { 
       fps: 15, 
       qrbox: function(width, height) {
-        // Make the scan box perfectly square, taking up 80% of the camera view
+        // Massive square scan box (85% of screen)
         var minSize = Math.min(width, height);
-        return { width: Math.floor(minSize * 0.8), height: Math.floor(minSize * 0.8) };
+        return { width: Math.floor(minSize * 0.85), height: Math.floor(minSize * 0.85) };
       }
     },
     onScanSuccess,
@@ -394,7 +339,7 @@ function startScanner() {
   .then(function() {
     scannerRunning = true;
     document.getElementById("startButton").innerText = "ACTIVE";
-    updateStatus("Camera active. Point at QR code.");
+    updateStatus("Camera active. Point at QR.");
   })
   .catch(function(error) {
     alert("Camera Error: Please allow camera permissions and refresh.");
@@ -408,13 +353,10 @@ function startScanner() {
 function onScanSuccess(decodedText) {
   if (processing) return;
   processing = true;
-  
   if (navigator.vibrate) navigator.vibrate(100);
-
   if (scannerRunning) {
     try { scanner.pause(true); } catch (e) {}
   }
-  
   updateStatus("Verifying...");
   verifyToken(decodedText);
 }
@@ -452,12 +394,11 @@ function showModal(type, title, contentHtml) {
 function closeModal() {
   const modal = document.getElementById("resultModal");
   modal.classList.remove("active");
-  
   setTimeout(() => {
     processing = false;
     if (scanner && scannerRunning) {
       try { scanner.resume(); } catch (error) {}
-      updateStatus("Camera active. Point at QR code.");
+      updateStatus("Camera active. Point at QR.");
     }
   }, 300);
 }
@@ -509,7 +450,7 @@ function handleResponse(data) {
   else {
     showModal("error", "INVALID QR", `
       <h1 style="color:#EF4444;">Verification Failed</h1>
-      <p style="color:#94A3B8; margin-bottom:20px; font-size:15px;">${data.message || "QR code is not valid."}</p>
+      <p style="color:#94A3B8; margin-bottom:20px; font-size:16px;">${data.message || "QR code is not valid."}</p>
     `);
   }
 }
